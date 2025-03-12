@@ -1,10 +1,15 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Invoice</title>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+     
+     <!-- font awesome CSS -->
+     <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
         .invoice-title h2, .invoice-title h3 {
@@ -52,9 +57,10 @@
         <!------ Include the above in your HEAD tag ---------->
         <!-- Close Button -->
         <div class="close-btn-container">
-            <button class="close-btn" id="close-btn" onclick="window.location.href='/cart';">
-                <i class="fas fa-times"></i> <!-- Font Awesome close icon -->
-            </button>
+            <a href="{% url 'user_profile' %}" class="btn btn-sm" style="border: 1px solid #777;border-radius: 0px;background-color: #ff860d;color: #fff !important;" >
+                <i class="fa-solid fa-xmark"></i>
+            </a>
+            <!-- <button type="submit" class="btn btn-sm" style="border: 1px solid #777;border-radius: 0px;background-color: #ff860d;color: #fff !important;" ><i class="fa-solid fa-xmark"></i></button> -->
         </div>
         <div class="container" style="border:2px solid #000;">
             <div class="row">

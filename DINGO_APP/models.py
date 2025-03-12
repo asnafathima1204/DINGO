@@ -85,20 +85,20 @@ class Address(models.Model):
         return str(self.user)
     
 # class ShippingAddress(models.Model):
-#     first_name=
-#     last_name=
-#     email=
+#     first_name=models.CharField(max_length=255,null=True)
+#     last_name=models.CharField(max_length=255,null=True)
+#     email=models.CharField(max_length=255)
 
 
 class Order(models.Model):
     order_id = models.CharField(max_length=10,null=True,blank=True)
-    item = models.ForeignKey(Item,on_delete=models.CASCADE,null=True)
+    item = models.ForeignKey(Cart,on_delete=models.CASCADE,null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     quantity = models.IntegerField(default=1,null=True,blank=True)
-    size = models.IntegerField(choices=size_choice,null=True,blank=True)
+    # size = models.IntegerField(choices=size_choice,null=True,blank=True)
     total = models.DecimalField(max_digits=10,decimal_places=2,null=True,blank=True)
     ordered_date = models.DateTimeField(null=True, blank=True)
-    address=models.ForeignKey(Address,on_delete=models.Case,null=True)
+    address=models.CharField(max_length=255,null=True)
 
     def __str__(self):
         return self.order_id

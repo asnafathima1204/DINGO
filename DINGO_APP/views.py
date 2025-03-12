@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
-
+from django.utils import timezone
 
 
 
@@ -221,14 +221,47 @@ def checkout_view(request):
 
     })
 
-def change_address(request):
+def confirmation_page(request):
+    return render(request,'order_confirmation.html')
+    
 
-    return redirect(checkout_view)
+
+def order_confirmation(request):
+    if request.method == 'POST':
+        address=request.POST.get('address')
+        user=request.user
+        print(address)
+
+        cart_item=Cart.objects.filter(user=user)
+
+        if cart_item:
+            order=Order.objects.create(
+                item=cart_item,
+                user=user,
+                quantity=cart_item.quantity,
+                total=cart_item.total_price,
+                ordered_date=timezone.now,
+                address=address
+            )
+            order.save()
+            return redirect('confirmation_page')
+        else:
+            return redirect('checkout_view')
+        
+    return redirect('checkout_view')
+
+    
+
+# def change_address(request):
+
+#     return redirect(checkout_view)
 
 
 # def order_details(request):
 #
 #     return redirect(checkout_view,locals())
+
+
 
 # ---------admin module-----------------------------
 
@@ -448,12 +481,6 @@ def update_address(request,id):
         messages.warning(request, "Invalid")
         return redirect(user_profile)
 
-
-# def delete_address(request,id):
-#     user = User.objects.get(id=request.user.id)
-#     data = Address.objects.filter(user=user, id=id)
-#     data.delete()
-#     return redirect(user_profile)
 
 @login_required
 def delete_address(request,id):
