@@ -1,0 +1,528 @@
+<!doctype html>
+{% load static %}
+{% load cart_filters %}
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>cart</title>
+    <link rel="icon" href="{% static 'img/favicon.png' %}">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <!-- animate CSS -->
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    <!-- owl carousel CSS -->
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <!-- themify CSS -->
+    <link rel="stylesheet" href="{% static 'css/themify-icons.css' %}">
+    <!-- flaticon CSS -->
+    <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
+    <!-- font awesome CSS -->
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- swiper CSS -->
+    <link rel="stylesheet" href="{% static 'css/slick.css' %}">
+    <link rel="stylesheet" href="{% static 'css/gijgo.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/nice-select.css' %}">
+    <link rel="stylesheet" href="{% static 'css/all.css' %}">
+    <!-- style CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/user.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+
+
+        <style>
+        .alert-box {
+            position: relative;
+            background-color: #f8d7da;
+            color: #842029;
+            padding: 15px;
+            border: 1px solid #f5c2c7;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .alert-box .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #alert-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1050; /* Ensure it appears above other content */
+        }
+        .alert {
+            margin: 0;
+            border-radius: 0;
+        }
+
+
+        .btn-color{
+            background-color: #ff9200;
+        }
+
+        #cart{
+            padding: 5rem 0;
+        }
+        
+        .r-cart .btn{
+            background-color: #ff9200;
+        }
+        .r-cart .btn:hover{
+            background-color: #f17902;
+        }
+        /* Style for the custom checkbox */
+        .cart-item .row .col-12 input[type="checkbox"] {
+            /* -webkit-appearance: none; 
+            -moz-appearance: none; */
+            appearance: none;
+            width: 20px; /* Set size of the checkbox */
+            height: 20px; /* Set size of the checkbox */
+            border: 2px solid #ccc; /* Border color for the checkbox */
+            border-radius: 4px; /* Rounded corners */
+            position: relative;
+            background-color: #fff; /* Background color when not checked */
+            cursor: pointer;
+        }
+
+        /* Style the checkbox when it's checked */
+        .cart-item .row .col-12 input[type="checkbox"]:checked {
+            background-color: #ff7f00; /* Orange background when checked */
+            border-color: #ff7f00; /* Border color for checked state */
+        }
+
+        /* Add tick mark for the checked state */
+        .cart-item .row .col-12 input[type="checkbox"]:checked::before {
+            content: '\2713'; /* Unicode character for checkmark */
+            font-size: 20px;
+            color: white; /* Set the tick color to white */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Center the checkmark */
+        }
+
+        .cartitems-container {
+            padding: 5rem 0;
+            background-color: #ddd;
+        }
+
+
+        @media only screen and (min-width: 200px) and (max-width: 767px) {
+            .navbar-light .navbar-toggler {
+                border-color: transparent;
+                position: absolute;
+                right: auto;
+                left: 0;
+            }
+
+            .navbar .navbar-brand {
+                text-align: center;
+                margin: 0 auto;
+                padding-left: 16%;
+            }
+        }
+
+        .modal-open .modal {
+            position: fixed;
+            z-index: 9999 !important;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        
+        .menu_fixed {
+            position: fixed;
+            z-index: 9998 !important;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.05);
+            top: 0;
+        }
+
+    </style>
+
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+    <!-- Alert Box -->
+        <div id="alert-container">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+
+
+    <!--::header part start::-->
+    <header class="main_menu home_menu">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg navbar-light">
+                        {% if user.is_active == 1 %}
+                        <a class="navbar-brand" href="{% url 'user_home' %}"> <img src="{% static 'img/logo.png' %}" alt="logo"> </a>
+                        {% else %}
+                        <a class="navbar-brand" href="{% url 'index' %}"> <img src="{% static 'img/logo.png' %}" alt="logo"> </a>
+                        {% endif %}
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class=" navbar-collapse main-menu-item "
+                            id="navbarSupportedContent">
+                            <ul class="navbar-nav">
+                                {% if user.is_active == 1 %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'user_home' %}">Home</a>
+                                </li>
+                                {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'index' %}">Home</a>
+                                </li>
+                                {% endif %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'about' %}">About</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'food_menu' %}">Menu</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'chefs' %}">Chefs</a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="{% url 'blog' %}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Blog
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{% url 'blog' %}">Blog</a>
+                                        <a class="dropdown-item" href="{% url 'single-blog' %}">Single blog</a>
+                                        <a class="dropdown-item" href="{% url 'elements' %}">Elements</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'cart' %}">
+                                        <i class="ti-shopping-cart-full" role="right-icon"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="menu_btn">
+                                <a href="#" class="btn_1 d-none d-sm-block">book a tabel</a>
+                            </div>
+
+                        </div>
+                        <div>
+                            <ul class="user_ul">
+                                <li class="nav-item dropdown user_dropdown">
+                                    <a class="eg-link" data-bs-toggle="modal">
+                                         <i class="ti-user" role="right-icon"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" >
+                                        <a class="dropdown-item" href="{% url 'user_profile' %}"><i class="ti-id-badge"></i> Profile</a>
+                                        <a class="dropdown-item" href="{% url 'user_order' %}"><i class="ti-truck"></i> My order</a>
+                                        <a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                                    </div>
+                                </li>
+
+
+                            </ul>
+                        </div>
+
+
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Header part end-->
+
+    <section id="cart">
+        <div class="container py-5">
+            {% if cart_items %}
+            <h2 class="mb-4">Shopping Cart</h2>
+            <div class="row">
+    
+                <div class="col-lg-8 order-lg-1">
+                     <div class="card shadow-sm">
+                        <div class="card-body">
+
+
+                            {% for i in cart_items %}
+                            <div class="cart-item mb-4 p-3">
+                                <div class="row align-items-center" style="border: 1px solid #777;">
+                                    <div class="col-12 d-flex justify-content-end" style="padding-right: 0px;">
+                                        <form method="post" action="{% url 'remove_cart' i.id %}" onsubmit="return confirm('Do you really want to remove this?');">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm" style="border: 1px solid #777;border-radius: 0px;background-color: #ff860d;color: #fff !important;" ><i class="fa-solid fa-xmark"></i></button>
+                                        </form>
+                                        <!-- <a href=""  class="btn mt-1 delete-link btn-danger">
+                                            
+                                        </a> -->
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <img src="{{ i.item.image.url }}" alt="{{ i.item.name }}" class="img-fluid rounded">
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="col-12 d-flex justify-content-end" style="font-size: 20px;">
+                                            <input type="checkbox" id="#" name="" value="">
+                                        </div>
+                                        <h5 class="mb-2">{{ i.item.name }}</h5>
+                                        <!-- Size Dropdown -->
+                                            <label for="size"><b>Select Size:</b></label>
+                                            <select name="size" class="size-selector" data-item-id="{{ i.id }}">
+                                                {% for value, label in i.item.get_size_choices %}
+                                                    <option value="{{ value }}" {% if i.size == value %}selected{% endif %}>
+                                                        {{ label }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        <div class="d-flex align-items-center">
+                                            <div class="input-group w-auto">
+                                                <a class="btn" href="{% url 'decrement_quantity' i.id %}" style="border: 1px solid #000;">-</a>
+                                                <input type="text" class="form-control text-center" value="{{ i.quantity }}" style="width: 60px">
+                                                <a class="btn" href="{% url 'increment_quantity' i.id %}" style="border: 1px solid #000;">+</a>
+                                            </div>
+                                            <span class="ms-auto fw-bold">₹{{ i.total_price }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="col-lg-4 order-lg-2 mb-4 r-cart">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            {% if cart_items %}
+                            <h5 class="card-title mb-4">Order Summary</h5>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Items ({{ item_count }})</span>
+                                <span>₹{{ total_cart_price }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Shipping</span>
+                                <span>₹{{ shipping_charge }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Tax</span>
+                                <span>₹{{ tax_amount }}</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between mb-4">
+                                <span class="fw-bold">Total</span>
+                                <span class="fw-bold">₹{{ grand_total }}</span>
+                            </div>
+                            <a  class="btn w-100" href="{% url 'checkout_view'  %}" style="color: #000 !important;">
+                              Order Now
+                            </a>
+                        {% endif %}
+                        </div>
+                    </div>
+    
+                </div>
+                
+            </div>
+            {% else %}
+            <section class="cartitems-container text-center">
+                <div class="cartitems" data-html="list">
+            
+                    <div class="cartitems-empty">
+                      <div class="cartitems-empty--inner">
+                        <img src="/static/img/icon/food-cart.png" alt="">
+                        <p>Your cart is empty</p>
+                        <a class="button-primary" href="{% url 'food_menu' %}">
+                            Continue Shopping
+                        </a>
+                        
+                      </div>
+                    </div>
+                  
+                </div>
+            
+                
+              </section>
+            {% endif %}
+        </div>
+    </section>
+
+
+
+   
+
+    
+    
+
+    
+
+    
+
+    <!-- footer part start-->
+    <footer class="footer-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-3 col-sm-6 col-md-3 col-lg-3">
+                    <div class="single-footer-widget footer_1">
+                        <h4>About Us</h4>
+                        <p>Heaven fruitful doesn't over for these theheaven fruitful doe over days
+                            appear creeping seasons sad behold beari ath of it fly signs bearing
+                            be one blessed after.</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 col-md-2 col-lg-3">
+                    <div class="single-footer-widget footer_2">
+                        <h4>Important Link</h4>
+                        <div class="contact_info">
+                            <ul>
+                                <li><a href="#">WHMCS-bridge</a></li>
+                                <li><a href="#"> Search Domain</a></li>
+                                <li><a href="#">My Account</a></li>
+                                <li><a href="#">Shopping Cart</a></li>
+                                <li><a href="#"> Our Shop</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 col-md-3 col-lg-3">
+                    <div class="single-footer-widget footer_2">
+                        <h4>Contact us</h4>
+                        <div class="contact_info">
+                            <p><span> Address :</span>Hath of it fly signs bear be one blessed after </p>
+                            <p><span> Phone :</span> +2 36 265 (8060)</p>
+                            <p><span> Email : </span>info@colorlib.com </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 col-md-4 col-lg-3">
+                    <div class="single-footer-widget footer_3">
+                        <h4>Newsletter</h4>
+                        <p>Heaven fruitful doesn't over lesser in days. Appear creeping seas</p>
+                        <form action="#">
+                            <div class="form-group">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" placeholder='Email Address'
+                                        onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email Address'">
+                                    <div class="input-group-append">
+                                        <button class="btn" type="button"><i class="fas fa-paper-plane"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright_part_text">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <p class="footer-text m-0"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="ti-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="copyright_social_icon text-right">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="ti-dribbble"></i></a>
+                            <a href="#"><i class="fab fa-behance"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- footer part end-->
+
+    <!-- jquery plugins here-->
+    <!-- jquery -->
+    <script src="{% static 'js/jquery-1.12.1.min.js' %}"></script>
+    <!-- popper js -->
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <!-- bootstrap js -->
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- easing js -->
+    <script src="{% static 'js/jquery.magnific-popup.js' %}"></script>
+    <!-- swiper js -->
+    <script src="{% static 'js/swiper.min.js' %}"></script>
+    <!-- swiper js -->
+    <script src="{% static 'js/masonry.pkgd.js' %}"></script>
+    <!-- particles js -->
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <!-- swiper js -->
+    <script src="{% static 'js/slick.min.js' %}"></script>
+    <script src="{% static 'js/gijgo.min.js' %}"></script>
+    <script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
+    <!-- custom js -->
+    <script src="{% static 'js/custom.js' %}"></script>
+
+
+
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js" integrity="sha512-b+nQTCdtTBIRIbraqNEwsjB6UvL3UEMkXnhzd8awtCYh0Kcsjl9uEgwVFVbhoj3uu1DO1ZMacNvLoyJJiNfcvg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+             
+
+    
+    <script>
+       document.querySelectorAll(".size-selector").forEach((selectElement) => {
+            selectElement.addEventListener("change", function() {
+                const selectedSize = this.value;
+                const itemId = this.getAttribute("data-item-id");
+
+                if (itemId) {
+                    const updateUrl = `/update_size/${itemId}/?size=${selectedSize}`;
+
+                    fetch(updateUrl, { method: 'GET' })
+                        .then(response => {
+                            if (response.redirected) {
+                                window.location.href = response.url;
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log(data.message);
+                        })
+                        .catch(error => console.error('Error:', error));
+                } else {
+                    console.error('Item ID is missing!');
+                }
+            });
+        });
+
+    </script>
+    
+
+
+
+
+</body>
+
+</html>

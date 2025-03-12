@@ -1,0 +1,735 @@
+
+<!doctype html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="icon" href="{% static 'img/favicon.png' %}">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- animate CSS -->
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    <!-- owl carousel CSS -->
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <!-- themify CSS -->
+    <link rel="stylesheet" href="{% static 'css/themify-icons.css' %}">
+    <!-- flaticon CSS -->
+    <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
+    <!-- font awesome CSS -->
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+    <!-- swiper CSS -->
+    <link rel="stylesheet" href="{% static 'css/slick.css' %}">
+    <link rel="stylesheet" href="{% static 'css/gijgo.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/nice-select.css' %}">
+    <link rel="stylesheet" href="{% static 'css/all.css' %}">
+    <!-- style CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/user.css' %}">
+
+
+        <style>
+        .alert-box {
+            position: relative;
+            background-color: #f8d7da;
+            color: #842029;
+            padding: 15px;
+            border: 1px solid #f5c2c7;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .alert-box .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #alert-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1050; /* Ensure it appears above other content */
+        }
+        .alert {
+            margin: 0;
+            border-radius: 0;
+        }
+
+
+        .btn-color{
+            background-color: #ff9200;
+        }
+        /* Container for the buttons */
+        .buttons-container {
+        display: flex;
+        justify-content: flex-start; /* Align buttons to the left */
+        gap: 10px; /* Space between the buttons */
+        padding-left: 100px;
+        }
+
+        /* Basic button styling */
+        button {
+        padding: 5px 10px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        }
+
+        /* Add to Cart Button Styling */
+        .add-to-cart {
+        background-color: #fa8764;
+        color: white;
+        }
+
+        /* Buy Now Button Styling */
+        .buy-now {
+        background-color: #FF5722;
+        color: white;
+        }
+
+        /* Button hover effect */
+        button:hover {
+        opacity: 0.8;
+        }
+
+        tbody img{
+            width: 50px;
+        }
+        @media only screen and (max-width: 992px)  {
+
+        .section_padding {
+            padding: 80px 0px;
+        }
+        .buttons-container {
+            display: flex;
+            justify-content: center; /* Align buttons to the left */
+            gap: 10px; /* Space between the buttons */
+            padding: 0px;
+            }
+        }
+
+        body{margin-top:20px;
+        background-color:#f2f6fc;
+        color:#69707a;
+        }
+        .img-account-profile {
+            height: 10rem;
+        }
+        .rounded-circle {
+            border-radius: 50% !important;
+        }
+        .card{
+            box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%);
+            padding: 10px;
+        }
+        .card .card-header {
+            font-weight: 500;
+        }
+        .card-header:first-child {
+            border-radius: 0.35rem 0.35rem 0 0;
+        }
+        .card-header {
+            padding: 1rem 1.35rem;
+            margin-bottom: 0;
+            background-color: rgba(33, 40, 50, 0.03);
+            border-bottom: 1px solid rgba(33, 40, 50, 0.125);
+        }
+        .form-control, .dataTable-input {
+            display: block;
+            width: 100%;
+            padding: 0.875rem 1.125rem;
+            font-size: 0.875rem;
+            font-weight: 400;
+            line-height: 1;
+            color: #69707a;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #c5ccd6;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border-radius: 0.35rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .nav-borders .nav-link.active {
+            color: #0061f2;
+            border-bottom-color: #0061f2;
+        }
+        .nav-borders .nav-link {
+            color: #69707a;
+            border-bottom-width: 0.125rem;
+            border-bottom-style: solid;
+            border-bottom-color: transparent;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            padding-left: 0;
+            padding-right: 0;
+            margin-left: 1rem;
+            margin-right: 1rem;
+        }
+
+        .details{
+            padding: 10rem 0;
+        }
+
+        body{margin-top:20px;}
+
+        .profile_btn{
+            margin: auto;
+            align-content: center;
+            text-align: right;
+        }
+
+        .profile_btn a{
+            background-color: #ff9200;
+            color: #000;
+        }
+
+        .profile_btn a:hover{
+            border: 1px solid #ff9200;
+        }
+
+
+        @media only screen and (min-width: 200px) and (max-width: 767px) {
+            .navbar-light .navbar-toggler {
+                border-color: transparent;
+                position: absolute;
+                right: auto;
+                left: 0;
+            }
+
+            .navbar .navbar-brand {
+                text-align: center;
+                margin: 0 auto;
+                padding-left: 16%;
+            }
+        }
+
+
+        
+        .modal-open .modal {
+            position: fixed;
+            z-index: 9999 !important;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        
+        .menu_fixed {
+            position: fixed;
+            z-index: 9998 !important;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.05);
+            top: 0;
+        }
+
+        .fade {
+            transition: opacity .15slinear;
+        }
+
+        .delete-link:hover{
+            color: #000 !important;
+            opacity: 0.7 !important;
+        }
+
+    </style>
+
+
+</head>
+
+<body>
+
+    <!-- Alert Box -->
+        <div id="alert-container">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+
+
+    <!--::header part start::-->
+    <header class="main_menu home_menu">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg navbar-light">
+                        {% if user.is_active == 1 %}
+                        <a class="navbar-brand" href="{% url 'user_home' %}"> <img src="{% static 'img/logo.png' %}" alt="logo"> </a>
+                        {% else %}
+                        <a class="navbar-brand" href="{% url 'index' %}"> <img src="{% static 'img/logo.png' %}" alt="logo"> </a>
+                        {% endif %}
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class=" navbar-collapse main-menu-item "
+                            id="navbarSupportedContent">
+                            <ul class="navbar-nav">
+                                {% if user.is_active == 1 %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'user_home' %}">Home</a>
+                                </li>
+                                {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'index' %}">Home</a>
+                                </li>
+                                {% endif %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'about' %}">About</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'food_menu' %}">Menu</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'chefs' %}">Chefs</a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="{% url 'blog' %}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Blog
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{% url 'blog' %}">Blog</a>
+                                        <a class="dropdown-item" href="{% url 'single-blog' %}">Single blog</a>
+                                        <a class="dropdown-item" href="{% url 'elements' %}">Elements</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'cart' %}">
+                                        <i class="ti-shopping-cart-full" role="right-icon"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="menu_btn">
+                                <a href="#" class="btn_1 d-none d-sm-block">book a tabel</a>
+                            </div>
+
+                        </div>
+                        <div>
+                            <ul class="user_ul">
+                                <li class="nav-item dropdown user_dropdown">
+                                    <a class="eg-link" data-bs-toggle="modal">
+                                         <i class="ti-user" role="right-icon"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" >
+                                        <a class="dropdown-item" href="{% url 'user_profile' %}"><i class="ti-id-badge"></i> Profile</a>
+                                        <a class="dropdown-item" href="{% url 'user_order' %}"><i class="ti-truck"></i> My order</a>
+                                        <a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                                    </div>
+                                </li>
+
+
+                            </ul>
+                        </div>
+
+
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Header part end-->
+
+
+
+
+            <div class="container-xl px-4 mt-4 details">
+            <div class="row">
+                <div class="col-xl-4">
+                    <!-- Profile picture card -->
+                    <div class="card mb-4 mb-xl-0">
+                        <div class="card-header">Profile</div>
+
+                        {% for i in user_details %}
+                        <div class="card-body text-center">
+                            <img class="img-account-profile rounded-circle mb-2" src="/static/img/profile.png" alt="">
+                            <p>{{ i.first_name }} {{ i.last_name }}</p>
+                            <p>{{ i.email }}</p>
+                        </div>
+                        {% endfor %}
+
+
+                        {% if user_address %}
+                        {% for i in user_address %}
+                        <div id="address-details" class="card mt-3">
+                            <div class="card-body">
+                                <p><strong>Phone:</strong> {{ i.phone_number }}</p>
+                                <p><strong>Street:</strong> {{ i.street }}</p>
+                                <p><strong>City:</strong> {{ i.city }}</p>
+                                <p><strong>District:</strong> {{ i.district }}</p>
+                                <p><strong>Zip Code:</strong> {{ i.zipcode }}</p>
+                            </div>
+
+                            <div class="row d-flex">
+                                <div class="col-lg-6">
+                                    <a class="btn mt-2" style="background-color: #ff9200;width: 100%;color: #000 !important;" href="{% url 'edit_address' i.id %}">Edit</a>
+                                    <!-- <button id="editAddressBtn"  data-bs-toggle="modal" data-bs-target="#editAddressModal">Edit </button> -->
+                                </div>
+                                <div class="col-lg-6">
+                                    <form method="POST" action="{% url 'delete_address' i.id %}" onsubmit="return confirm('Do you really want to delete this?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn mt-2 delete-link" style="background-color: #ff9200;width: 100%;">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                           
+                        </div>
+                        {% endfor %}
+                        <!-- Edit Address Button -->
+                        <button id="moreAddressBtn" class="btn mt-2" style="background-color: #ff9200;" data-bs-toggle="modal" data-bs-target="#addAddressModal">Add More Address</button>
+                    {% else %}
+                        <!-- Add Address Button -->
+                        <button id="addAddressBtn" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#addAddressModal">Add Address</button>
+                    {% endif %}
+
+
+                    </div>
+                </div>
+                <div class="col-xl-8">
+                    <section class=" gradient-custom">
+                        <div class="container">
+                          <div class="row d-flex justify-content-center align-items-center h-100">
+                            <div class="col-lg-12 col-xl-12">
+                              <div class="card" style="border-radius: 10px;">
+                                <div class="card-header px-4 py-5">
+                                  <h5 class="text-muted mb-0">Thanks for your Order, <span style="color: #fa8764;">Asna</span>!</h5>
+                                </div>
+                                <div class="card-body p-4">
+                                  <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <p class="lead fw-normal mb-0" style="color: #fa8764;">Receipt</p>
+                                    <p class="small text-muted mb-0">Receipt Voucher : 1KAU9-84UIL</p>
+                                  </div>
+                                  <div class="card shadow-0 border mb-4">
+                                    <div class="card-body">
+                                      <div class="row">
+                                        <div class="col-md-2">
+                                          <img src="/static/img/food_menu/single_food_2.png"
+                                            class="img-fluid" alt="Phone">
+                                        </div>
+                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                          <p class="text-muted mb-0">Dosa</p>
+                                        </div>
+                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                          <p class="text-muted mb-0 small">White</p>
+                                        </div>
+                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                          <p class="text-muted mb-0 small">Size: L</p>
+                                        </div>
+                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                          <p class="text-muted mb-0 small">Qty: 1</p>
+                                        </div>
+                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                          <p class="text-muted mb-0 small">$499</p>
+                                        </div>
+                                      </div>
+                                      <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">
+                                      <div class="row d-flex align-items-center">
+                                        <div class="col-md-2">
+                                          <p class="text-muted mb-0 small">Track Order</p>
+                                        </div>
+                                        <div class="col-md-10">
+                                          <div class="progress" style="height: 6px; border-radius: 16px;">
+                                            <div class="progress-bar" role="progressbar"
+                                              style="width: 65%; border-radius: 16px; background-color: #fa8764;" aria-valuenow="65"
+                                              aria-valuemin="0" aria-valuemax="100"></div>
+                                          </div>
+                                          <div class="d-flex justify-content-around mb-1">
+                                            <p class="text-muted mt-1 mb-0 small ms-xl-5">Out for delivary</p>
+                                            <p class="text-muted mt-1 mb-0 small ms-xl-5">Delivered</p>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="card shadow-0 border mb-4">
+                                    <div class="card-body">
+                                      <div class="row">
+                                        <div class="col-md-2">
+                                          <img src="/static/img/food_menu/single_food_1.png"
+                                            class="img-fluid" alt="Phone">
+                                        </div>
+                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                          <p class="text-muted mb-0">Cake</p>
+                                        </div>
+                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                          <p class="text-muted mb-0 small">Pink rose</p>
+                                        </div>
+                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                          <p class="text-muted mb-0 small">Size : Quarter</p>
+                                        </div>
+                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                          <p class="text-muted mb-0 small">Qty: 1</p>
+                                        </div>
+                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                          <p class="text-muted mb-0 small">$399</p>
+                                        </div>
+                                      </div>
+                                      <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">
+                                      <div class="row d-flex align-items-center">
+                                        <div class="col-md-2">
+                                          <p class="text-muted mb-0 small">Track Order</p>
+                                        </div>
+                                        <div class="col-md-10">
+                                          <div class="progress" style="height: 6px; border-radius: 16px;">
+                                            <div class="progress-bar" role="progressbar"
+                                              style="width: 20%; border-radius: 16px; background-color: #fa8764;" aria-valuenow="20"
+                                              aria-valuemin="0" aria-valuemax="100"></div>
+                                          </div>
+                                          <div class="d-flex justify-content-around mb-1">
+                                            <p class="text-muted mt-1 mb-0 small ms-xl-5">Out for delivary</p>
+                                            <p class="text-muted mt-1 mb-0 small ms-xl-5">Delivered</p>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="profile_btn">
+                                    <a href="{% url 'user_order' %}" class="btn" style="color: #000;" >Back to Order</a>
+                                  </div>
+                                    
+                      
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                </div>
+        
+
+
+<!-- Add Address Modal -->
+<div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addAddressLabel">Add Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'save_address' %}">
+                    {% csrf_token %}
+                    <label>Phone:</label>
+                    <input type="text" name="phone_number" class="form-control" required>
+
+                    <label>Street:</label>
+                    <input type="text" name="street" class="form-control" required>
+
+                    <label>City:</label>
+                    <input type="text" name="city" class="form-control" required>
+
+                    <label>District:</label>
+                    <input type="text" name="district" class="form-control" required>
+
+                    <label>Zip Code:</label>
+                    <input type="text" name="zipcode" class="form-control" required>
+
+                    <label>Address Type:</label>
+                     <select name="address_type" class="form-control">
+                        <option value="1" >Permanent</option>
+                        <option value="2" >Temporary</option>
+                    </select>
+
+                    <button type="submit" class="btn btn-success mt-3">Save Address</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Address Modal -->
+{% if user_address %}
+<div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="editAddressLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editAddressLabel">Edit Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <input type="hidden" name="address_id" value="{{ user_address.0.id }}">
+
+                    <label>Phone:</label>
+                    <input type="text" name="phone_number" class="form-control" value="{{ user_address.0.phone_number }}" required>
+
+                    <label>Street:</label>
+                    <input type="text" name="street" class="form-control" value="{{ user_address.0.street }}" required>
+
+                    <label>City:</label>
+                    <input type="text" name="city" class="form-control" value="{{ user_address.0.city }}" required>
+
+                    <label>District:</label>
+                    <input type="text" name="district" class="form-control" value="{{ user_address.0.district }}" required>
+
+                    <label>Zip Code:</label>
+                    <input type="text" name="zipcode" class="form-control" value="{{ user_address.0.zipcode }}" required>
+
+                    <label>Address Type:</label>
+                    <select name="address_type" class="form-control">
+                        <option value="1" >Permanent</option>
+                        <option value="2" >Temporary</option>
+                    </select>
+
+                    <button type="submit" class="btn btn-warning mt-3">Update Address</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
+    <!-- footer part start-->
+    <footer class="footer-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-3 col-sm-6 col-md-3 col-lg-3">
+                    <div class="single-footer-widget footer_1">
+                        <h4>About Us</h4>
+                        <p>Heaven fruitful doesn't over for these theheaven fruitful doe over days
+                            appear creeping seasons sad behold beari ath of it fly signs bearing
+                            be one blessed after.</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 col-md-2 col-lg-3">
+                    <div class="single-footer-widget footer_2">
+                        <h4>Important Link</h4>
+                        <div class="contact_info">
+                            <ul>
+                                <li><a href="#">WHMCS-bridge</a></li>
+                                <li><a href="#"> Search Domain</a></li>
+                                <li><a href="#">My Account</a></li>
+                                <li><a href="#">Shopping Cart</a></li>
+                                <li><a href="#"> Our Shop</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 col-md-3 col-lg-3">
+                    <div class="single-footer-widget footer_2">
+                        <h4>Contact us</h4>
+                        <div class="contact_info">
+                            <p><span> Address :</span>Hath of it fly signs bear be one blessed after </p>
+                            <p><span> Phone :</span> +2 36 265 (8060)</p>
+                            <p><span> Email : </span>info@colorlib.com </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 col-md-4 col-lg-3">
+                    <div class="single-footer-widget footer_3">
+                        <h4>Newsletter</h4>
+                        <p>Heaven fruitful doesn't over lesser in days. Appear creeping seas</p>
+                        <form action="#">
+                            <div class="form-group">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" placeholder='Email Address'
+                                        onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email Address'">
+                                    <div class="input-group-append">
+                                        <button class="btn" type="button"><i class="fas fa-paper-plane"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright_part_text">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <p class="footer-text m-0"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                             Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="ti-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                             <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        </p>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="copyright_social_icon text-right">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="ti-dribbble"></i></a>
+                            <a href="#"><i class="fab fa-behance"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- footer part end-->
+
+    <!-- jquery plugins here-->
+    <!-- jquery -->
+    <script src="{% static 'js/jquery-1.12.1.min.js' %}"></script>
+    <!-- popper js -->
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <!-- bootstrap js -->
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- easing js -->
+    <script src="{% static 'js/jquery.magnific-popup.js' %}"></script>
+    <!-- swiper js -->
+    <script src="{% static 'js/swiper.min.js' %}"></script>
+    <!-- swiper js -->
+    <script src="{% static 'js/masonry.pkgd.js' %}"></script>
+    <!-- particles js -->
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <!-- swiper js -->
+    <script src="{% static 'js/slick.min.js' %}"></script>
+    <script src="{% static 'js/gijgo.min.js' %}"></script>
+    <script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
+    <!-- custom js -->
+    <script src="{% static 'js/custom.js' %}"></script>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        // function myFunction() {
+        //     confirm("Do you really want to delete this?");
+        //     }
+        // function myFunction() {
+        //   let text = "Are you really want to delete this!";
+        //   if (confirm(text) == true) {
+        //     text = "You pressed OK!";
+        //   } else {
+        //     text = "You canceled!";
+        //   }
+        //   document.getElementById("demo").innerHTML = text;
+        // }
+
+        // function myFunction() {
+        //     if (confirm("Do you really want to delete this?")) {
+        //         deleteItem(); // Call another function if user clicks "OK"
+        //     }
+        // }
+        </script>
+
+
+</body>

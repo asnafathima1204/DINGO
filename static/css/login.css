@@ -1,0 +1,11 @@
+.modal-header i{
+    color: #ff6426;
+    font-size: 15px;
+}
+.btn-color{
+    background-color: #ff6426;
+    margin-bottom: 10px;
+}
+.btn-color:hover{
+    opacity: 0.9;
+}
