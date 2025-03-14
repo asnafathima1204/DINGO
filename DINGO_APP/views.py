@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from .models import *
-from .models import Item
+# from .models import Item,OrderItem
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
@@ -179,7 +179,7 @@ def update_size(request, id):
 
 def remove_cart(request,id):
     if request.method == "POST":
-            data = Cart.objects.filter(id=id)
+            data = Cart.objects.get(id=id)
             data.delete()
             messages.success(request, "Cart Item Removed successfully!")
             return redirect(cart)
@@ -191,7 +191,7 @@ def remove_cart(request,id):
 
 def checkout_view(request):
     cart_items = Cart.objects.filter(user_id=request.user)
-    details = Address.objects.filter(user_id=request.user,address_type=1)
+    details = Address.objects.filter(user_id=request.user)
     item_count = cart_items.count()
 
     item_sizes = {}
@@ -222,48 +222,52 @@ def checkout_view(request):
     })
 
 def confirmation_page(request):
-    return render(request,'order_confirmation.html')
+    order = Order.objects.last()  # Get the most recent order
+    return render(request, 'order_confirmation.html', {'order': order})
     
 
 
 def order_confirmation(request):
     if request.method == 'POST':
         address=request.POST.get('address')
-        user=request.user
-        print(address)
-
-        cart_item=Cart.objects.filter(user=user)
-
-        if cart_item:
+        total_quantity=0
+        total_price=0
+        if address:
+            user=request.user
+            print(address)
+            cart_item=Cart.objects.filter(user=user)
+            if not cart_item.exists():
+                messages.error(request, "Your cart is empty!")
             order=Order.objects.create(
-                item=cart_item,
-                user=user,
-                quantity=cart_item.quantity,
-                total=cart_item.total_price,
-                ordered_date=timezone.now,
-                address=address
-            )
+                    user=user,
+                    ordered_date=timezone.now(),
+                    address=address
+                )
+
+            for i in cart_item:
+                print(i.quantity)
+                # print(i.id)
+                OrderItem.objects.create(order=order,item=i.item, quantity=i.quantity, size=i.size)
+                total_price=total_price+(i.item.price*i.quantity)
+                print(total_price)
+                total_quantity=total_quantity+i.quantity
+                
+            order.total=total_price
+            order.quantity=total_quantity
+            order.total += order.shipping_charge()
+            order.total += order.add_tax()
             order.save()
+            cart_item.delete()
             return redirect('confirmation_page')
-        else:
-            return redirect('checkout_view')
         
+        else:
+            messages.error(request,'Please add address to your profile')
     return redirect('checkout_view')
 
-    
-
-# def change_address(request):
-
-#     return redirect(checkout_view)
-
-
-# def order_details(request):
-#
-#     return redirect(checkout_view,locals())
 
 
 
-# ---------admin module-----------------------------
+# ---------admin module----------------------------
 
 @login_required
 def dashboard(request):

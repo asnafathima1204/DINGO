@@ -70,7 +70,7 @@ class Cart(models.Model):
 
     def shipping_charge(self):
         total_price = self.total_price()
-        return Decimal("50.00") if total_price > Decimal("500.00") else Decimal("10.00")
+        return Decimal("50.00") if total_price > Decimal("500.00") else Decimal("10.00") 
 
 class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -83,24 +83,37 @@ class Address(models.Model):
 
     def __str__(self):
         return str(self.user)
-    
-# class ShippingAddress(models.Model):
-#     first_name=models.CharField(max_length=255,null=True)
-#     last_name=models.CharField(max_length=255,null=True)
-#     email=models.CharField(max_length=255)
 
 
 class Order(models.Model):
-    order_id = models.CharField(max_length=10,null=True,blank=True)
-    item = models.ForeignKey(Cart,on_delete=models.CASCADE,null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     quantity = models.IntegerField(default=1,null=True,blank=True)
-    # size = models.IntegerField(choices=size_choice,null=True,blank=True)
     total = models.DecimalField(max_digits=10,decimal_places=2,null=True,blank=True)
     ordered_date = models.DateTimeField(null=True, blank=True)
-    address=models.CharField(max_length=255,null=True)
+    address = models.CharField(max_length=255)
 
     def __str__(self):
         return self.order_id
+    
+    def shipping_charge(self):
+        total_price = self.total or Decimal("0.00")
+        return Decimal("50.00") if total_price > Decimal("500.00") else Decimal("10.00")
+
+    def add_tax(self):
+        total_price = self.total or Decimal("0.00")
+        return Decimal("21.99") if total_price > Decimal("500.00") else Decimal("0.00")
+           
+    
+class OrderItem(models.Model):
+    order=models.ForeignKey(Order,on_delete=models.CASCADE, null=True)
+    item=models.ForeignKey(Item,on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1, null=True, blank=True)
+    size = models.CharField(max_length=10, null=True, blank=True)
+
+    def __str__(self):
+        return self.id
+
+
+
 
 
