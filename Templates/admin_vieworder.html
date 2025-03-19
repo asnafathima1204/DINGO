@@ -6,21 +6,46 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Food-items</title>
-  <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.png' %}" />
+  <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />
   <link rel="stylesheet" href="{% static 'assets/css/styles.min.css' %}" />
-  <link rel="stylesheet" href="/static/css/new.css">
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
   <!-- font awesome cdn -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+  <style>
+    .alert-warning {
+    z-index: 9999;
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+    }
+    /* .orderBox{
+      border: 1px solid red;
+      
+      margin: auto;
+    } */
+  </style>
 </head>
 
 <body>
+
+  <div id="alert-container">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+  </div>
+
+
   <!--  Body Wrapper -->
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
     <!-- Sidebar Start -->
+     <!-- Sidebar Start -->
     <aside class="left-sidebar">
       <!-- Sidebar scroll-->
       <div>
@@ -64,13 +89,13 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="{% url 'admin_user' %}" aria-expanded="false">
-                <span>
-                  <i class="ti ti-user"></i>
-                </span>
-                <span class="hide-menu">User</span>
-              </a>
-            </li>
+                <a class="sidebar-link" href="{% url 'admin_user' %}" aria-expanded="false">
+                  <span>
+                    <i class="ti ti-user"></i>
+                  </span>
+                  <span class="hide-menu">User</span>
+                </a>
+              </li>
             <li class="nav-small-cap">
               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
               <span class="hide-menu">AUTH</span>
@@ -89,7 +114,9 @@
       </div>
       <!-- End Sidebar scroll-->
     </aside>
-    <!--  Sidebar End -->
+
+   
+
     <!--  Main wrapper -->
     <div class="body-wrapper">
       <!--  Header Start -->
@@ -121,36 +148,46 @@
         </nav>
       </header>
       <!--  Header End -->
+
+      {% include 'admin_form.html' %}
+
       <div class="container-fluid">
         <div class="container-fluid">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title fw-semibold mb-4">Order details</h5>
+              <div class="d-flex">
+                <a href="{% url 'admin_order' %}">Back/</a>
+                <h5 class="card-title fw-semibold mb-4">Order Items</h5>
+              </div>
               <div class="card mb-0">
                 <div class="card-body p-4">
                   <div class="table-responsive">
                     <table class="table table-bordered table-hover">
                       <thead>
                         <tr>
-                          <th scope="col">S/N</th>
-                          <th scope="col"  class="text-nowrap">Order ID</th>
-                          <th scope="col">Date</th>
-                          <th scope="col"  class="text-nowrap">Customer Name</th>
-                          <th scope="col">Address</th>
-                          <th scope="col">Amount</th>
-                          <th scope="col"  class="text-nowrap"></th>
+                          <th>Item name</th>
+                          <th>Item Id</th>
+                          <th>Quantity</th>
+                          <th>Price/item</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {% for i in order %}
-                        <tr class="orderDetailTableRow">
-                          <th scope="row">{{ forloop.counter }}</th>
-                          <td >{{ i.id }}</td>
-                          <td class="text-nowrap">{{ i.ordered_date|date:"d-m-Y" }}</td>
-                          <td class="text-nowrap">{{ i.user.first_name }} {{ i.user.last_name }}</td>
-                          <td >{{ i.address }}</td>
-                          <td>{{ i.total }}</td>
-                          <td class="text-nowrap"><a class="btn btnOrder" href="{% url 'admin_vieworder' i.id %}">View</a></td>
+                        {% for i in order_items %}
+                        <tr>
+                            <td>
+                              <div class="item-div d-flex align-items-center">
+                                  <div class="img-div">
+                                      <img src="{{ i.item.image.url }}" alt="{{ i.item.name }}" width="80" height="80">
+                                  </div>
+                                  <div class="item-name-div">
+                                      <h6 class="itemname_display">{{ i.item.name }} ({{ i.size }})</h6>
+                                      <p class="category-display">{{ i.item.category }}</p>
+                                  </div>
+                              </div>
+                            </td>
+                            <td>{{ i.item.item_id }}</td>
+                            <td>{{ i.quantity }}</td>
+                            <td>{{ i.size_oriented_price }}</td>
                         </tr>
                         {% endfor %}
                       </tbody>
@@ -159,19 +196,64 @@
                 </div>
               </div>
             </div>
+            <div class="container-fluid">
+              <div class="d-flex">
+                <div class="card ms-auto" style="width: 50%; max-width: 350px;">
+                  <div class="card-body orderBox" >
+                    {% if order_items %}
+                      <h5 class="card-title mb-4">Order Summary</h5>
+                      <!-- <div class="d-flex justify-content-between mb-3">
+                          <span>Items ({{ item_count }})</span>
+                          <span>₹{{ total_cart_price }}</span>
+                      </div> -->
+                      <div class="d-flex justify-content-between mb-3">
+                        <span>Subtotal</span>
+                        <span>₹{{ subtotal }}</span>
+                      </div>
+                      <div class="d-flex justify-content-between mb-3">
+                          <span>Shipping</span>
+                          <span>₹{{ order.shipping }}</span>
+                      </div>
+                      <div class="d-flex justify-content-between mb-3">
+                          <span>Tax</span>
+                          <span>₹{{ order.tax }}</span>
+                      </div>
+                      <hr style="border: 1px solid #ccc; margin: 10px 0; opacity: 1;">
+                      <div class="d-flex justify-content-between mb-4">
+                          <span class="fw-bold">Total</span>
+                          <span class="fw-bold">₹{{ order.total }}</span>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+             
+              
+              <!-- <div class="d-flex" style="float: right;">
+                <div >
+                  <form method="POST" action="" onsubmit="return confirm('Do you really want to delete this?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn mt-1 delete-link btn-danger"  >Delete</button>
+                  </form>
+                </div>
+                <div>
+                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#update" style="float: right;margin: 5px;">Update</button>
+                </div>
+              </div> -->
+
         </div>
       </div>
     </div>
   </div>
   <script src="{% static 'assets/libs/jquery/dist/jquery.min.js' %}"></script>
-<!--  <script src="{% static 'assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>-->
+  <script src="{% static 'assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
   <script src="{% static 'assets/js/sidebarmenu.js' %}"></script>
-  <script src="{% static 'assets/js/app.min.js' %}"></script>
-  <script src="{% static 'assets/libs/simplebar/dist/simplebar.js' %}"></script>
-  <!-- font awesome cdn -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js" integrity="sha512-b+nQTCdtTBIRIbraqNEwsjB6UvL3UEMkXnhzd8awtCYh0Kcsjl9uEgwVFVbhoj3uu1DO1ZMacNvLoyJJiNfcvg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="{% static 'js/app.min.js' %}"></script>
+  <script src="{% static 'libs/simplebar/dist/simplebar.js' %}"></script>
+   <!-- bootstrap js -->
+   <script src="{% static 'js/bootstrap.min.js' %}"></script>
 </body>
 
 </html>

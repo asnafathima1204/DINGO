@@ -1,6 +1,5 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from .models import *
-# from .models import Item,OrderItem
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
@@ -9,16 +8,8 @@ from django.utils import timezone
 
 
 
-
 # Create your views here.
-from django.http import HttpResponse
 
-#rendering an http response
-# def my_first_view(request):
-#     return HttpResponse("Hello, world! This is my first HTTP response in Django.")
-
-
-# rendering an htmlpage
 def index(request):
     return render(request,'index.html')
 
@@ -82,11 +73,6 @@ def item_filter(request,category):
     else:
         half_length += 1
         print(half_length)
-
-    # context = {
-    #     'food_items': food_items,
-    #     'selected_category': selected_category,
-    # }
     return render(request, 'food_menu.html', locals())
 
 
@@ -96,174 +82,6 @@ def blog(request):
 
 def single_blog(request):
     return render(request,'single-blog.html')
-
-
-def cart(request):
-    cart_items = Cart.objects.filter(user=request.user)
-
-    item_count = cart_items.count()
-
-    item_sizes = {}
-    total_cart_price = sum(item.total_price() for item in cart_items)  # Recalculate total price
-
-    for cart_item in cart_items:
-        item_category = cart_item.item.category
-        item_sizes[cart_item.item.id] = size_choice.get(item_category, [])
-    # Calculate shipping charge
-    shipping_charge = Decimal("50.00") if total_cart_price > Decimal("500.00") else Decimal("10.00")
-
-    # Calculate tax (if needed, or set to 0)
-    tax_amount = Decimal("21.99") if total_cart_price > Decimal("500.00") else Decimal("00.00")  # Or calculate dynamically
-
-    # Calculate the final total
-    grand_total = total_cart_price + shipping_charge + tax_amount
-
-
-    return render(request, 'cart.html', {
-        'cart_items': cart_items,
-        'item_count': item_count,
-        'total_cart_price': total_cart_price,
-        'shipping_charge': shipping_charge,
-        'tax_amount': tax_amount,
-        'grand_total': grand_total,
-
-    })
-
-
-def add_cart(request, id):
-    food_items = Item.objects.get(id=id)
-    user = request.user
-
-    # Check if the item already exists in the cart
-    cart_item, created = Cart.objects.get_or_create(
-        item=food_items,
-        user=user,
-        defaults={'quantity': 1, 'size': 3}  # Initial values for new item
-    )
-
-    if not created:
-        # If the item already exists, increase the quantity
-        cart_item.quantity += 1
-        cart_item.save()
-
-    return redirect(cart)
-
-
-#updating quantity
-def increment_quantity(request, id):
-    cart_item = Cart.objects.get(id=id)
-    cart_item.quantity += 1
-    cart_item.save()
-    return redirect(cart)  # Redirect to your cart page or another view
-
-
-def decrement_quantity(request, id):
-    cart_item = Cart.objects.get(id=id)
-
-    if cart_item.quantity > 1:
-        cart_item.quantity -= 1
-        cart_item.save()
-    else:
-        messages.warning(request, "Quantity cannot be less than 1!")
-
-    return redirect(cart)
-
-
-def update_size(request, id):
-    size = request.GET.get('size')
-    cart_data = Cart.objects.get(id=id)
-    cart_data.size = size
-    cart_data.save()
-    print(size)
-    return redirect('cart')
-
-def remove_cart(request,id):
-    if request.method == "POST":
-            data = Cart.objects.get(id=id)
-            data.delete()
-            messages.success(request, "Cart Item Removed successfully!")
-            return redirect(cart)
-
-    else:
-        messages.success(request, "Something went wrong")
-        return redirect(cart)
-
-
-def checkout_view(request):
-    cart_items = Cart.objects.filter(user_id=request.user)
-    details = Address.objects.filter(user_id=request.user)
-    item_count = cart_items.count()
-
-    item_sizes = {}
-    total_cart_price = sum(item.total_price() for item in cart_items)  # Recalculate total price
-
-    for cart_item in cart_items:
-        item_category = cart_item.item.category
-        item_sizes[cart_item.item.id] = size_choice.get(item_category, [])
-    # Calculate shipping charge
-    shipping_charge = Decimal("50.00") if total_cart_price > Decimal("500.00") else Decimal("10.00")
-
-    # Calculate tax (if needed, or set to 0)
-    tax_amount = Decimal("21.99") if total_cart_price > Decimal("500.00") else Decimal(
-        "00.00")  # Or calculate dynamically
-
-    # Calculate the final total
-    grand_total = total_cart_price + shipping_charge + tax_amount
-
-    return render(request, 'user_checkout.html', {
-        'cart_items': cart_items,
-        'item_count': item_count,
-        'total_cart_price': total_cart_price,
-        'shipping_charge': shipping_charge,
-        'tax_amount': tax_amount,
-        'grand_total': grand_total,
-        'details':details
-
-    })
-
-def confirmation_page(request):
-    order = Order.objects.last()  # Get the most recent order
-    return render(request, 'order_confirmation.html', {'order': order})
-    
-
-
-def order_confirmation(request):
-    if request.method == 'POST':
-        address=request.POST.get('address')
-        total_quantity=0
-        total_price=0
-        if address:
-            user=request.user
-            print(address)
-            cart_item=Cart.objects.filter(user=user)
-            if not cart_item.exists():
-                messages.error(request, "Your cart is empty!")
-            order=Order.objects.create(
-                    user=user,
-                    ordered_date=timezone.now(),
-                    address=address
-                )
-
-            for i in cart_item:
-                print(i.quantity)
-                # print(i.id)
-                OrderItem.objects.create(order=order,item=i.item, quantity=i.quantity, size=i.size)
-                total_price=total_price+(i.item.price*i.quantity)
-                print(total_price)
-                total_quantity=total_quantity+i.quantity
-                
-            order.total=total_price
-            order.quantity=total_quantity
-            order.total += order.shipping_charge()
-            order.total += order.add_tax()
-            order.save()
-            cart_item.delete()
-            return redirect('confirmation_page')
-        
-        else:
-            messages.error(request,'Please add address to your profile')
-    return redirect('checkout_view')
-
 
 
 
@@ -276,9 +94,12 @@ def dashboard(request):
 
 @login_required
 def admin_fooditems(request):
-    food_items = Item.objects.all()
-
-    return render(request,'admin_fooditems.html',locals())
+    # food_items = Item.objects.all()
+    food_items = Item.objects.all().order_by('item_id')  
+    context = {
+        'food_items': food_items
+    }
+    return render(request,'admin_fooditems.html',context)
 
 @login_required
 def admin_additems(request):
@@ -373,14 +194,235 @@ def admin_deleteitems(request,id):
 
 @login_required
 def admin_order(request):
-    return render(request,'admin_order.html')
+    order=Order.objects.all()
+    return render(request,'admin_order.html',locals())
+
+@login_required
+def admin_vieworder(request,id):
+    order=Order.objects.get(id=id)
+    order_items=OrderItem.objects.filter(order_id=order.id)
+    for i in order_items:
+      i.size_oriented_price=i.item.price*i.get_size_price_factor()
+      i.total_price = i.size_oriented_price * i.quantity
+    subtotal = sum(i.total_price for i in order_items)
+    return render(request,'admin_vieworder.html',locals())
+
 
 @login_required
 def admin_user(request):
-    return render(request,'admin_user.html')
+    users = User.objects.all()
+    return render(request,'admin_user.html',{'users':users})
+
+def toggle_user_status(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    
+    # Toggle the is_active status
+    user.is_active = not user.is_active  
+    user.save()
+
+    return redirect('admin_user') 
 
 
 # ------user module -------------------
+
+@login_required
+def cart(request):
+    cart_items = Cart.objects.filter(user=request.user)
+
+    item_count = cart_items.count()
+
+    item_sizes = {}
+    total_cart_price = sum(item.total_price() for item in cart_items)  # Recalculate total price
+
+    for cart_item in cart_items:
+        item_category = cart_item.item.category
+        item_sizes[cart_item.item.id] = size_choice.get(item_category, [])
+    # Calculate shipping charge
+    shipping_charge = Decimal("50.00") if total_cart_price > Decimal("500.00") else Decimal("10.00")
+
+    # Calculate tax (if needed, or set to 0)
+    tax_amount = Decimal("21.99") if total_cart_price > Decimal("500.00") else Decimal("00.00")  # Or calculate dynamically
+
+    # Calculate the final total
+    grand_total = total_cart_price + shipping_charge + tax_amount
+
+
+    return render(request, 'cart.html', {
+        'cart_items': cart_items,
+        'item_count': item_count,
+        'total_cart_price': total_cart_price,
+        'shipping_charge': shipping_charge,
+        'tax_amount': tax_amount,
+        'grand_total': grand_total,
+
+    })
+
+
+@login_required
+def add_cart(request, id):
+    food_items = Item.objects.get(id=id)
+    user = request.user
+    # Check if the item already exists in the cart
+    cart_item, created = Cart.objects.get_or_create(
+        item=food_items,
+        user=user,
+        defaults={'quantity': 1,'size':1}  # Initial values for new item
+    )
+    cart_item.shipping_charge()
+    
+    if not created:
+        cart_item.quantity += 1 
+        cart_item.save()
+        messages.success(request, "Item quantity updated in cart!")
+    else:
+        messages.success(request, "Item successfully added to cart!")
+        
+
+    return redirect(food_menu)
+
+
+@login_required
+#updating quantity
+def increment_quantity(request, id):
+    cart_item = Cart.objects.get(id=id)
+    cart_item.quantity += 1
+    cart_item.save()
+    return redirect(cart)  # Redirect to your cart page or another view
+
+
+@login_required
+def decrement_quantity(request, id):
+    cart_item = Cart.objects.get(id=id)
+
+    if cart_item.quantity > 1:
+        cart_item.quantity -= 1
+        cart_item.save()
+    else:
+        messages.warning(request, "Quantity cannot be less than 1!")
+
+    return redirect(cart)
+
+
+@login_required
+def update_size(request, id):
+    size = request.GET.get('size')
+    cart_data = Cart.objects.get(id=id)
+    cart_data.size = size
+    cart_data.save()
+    print(size)
+    return redirect('cart')
+
+
+@login_required
+def remove_cart(request,id):
+    if request.method == "POST":
+            data = Cart.objects.get(id=id)
+            data.delete()
+            messages.success(request, "Cart Item Removed successfully!")
+            return redirect(cart)
+
+    else:
+        messages.success(request, "Something went wrong")
+        return redirect(cart)
+
+@login_required
+def checkout_view(request):
+    cart_items = Cart.objects.filter(user_id=request.user)
+    details = Address.objects.filter(user_id=request.user)
+    item_count = cart_items.count()
+
+    item_sizes = {}
+    total_cart_price = sum(item.total_price() for item in cart_items)  # Recalculate total price
+
+    for cart_item in cart_items:
+        item_category = cart_item.item.category
+        item_sizes[cart_item.item.id] = size_choice.get(item_category, [])
+    # Calculate shipping charge
+    shipping_charge = Decimal("50.00") if total_cart_price > Decimal("500.00") else Decimal("10.00")
+
+    # Calculate tax (if needed, or set to 0)
+    tax_amount = Decimal("21.99") if total_cart_price > Decimal("500.00") else Decimal(
+        "00.00")  # Or calculate dynamically
+
+    # Calculate the final total
+    grand_total = total_cart_price + shipping_charge + tax_amount
+
+    return render(request, 'user_checkout.html', {
+        'cart_items': cart_items,
+        'item_count': item_count,
+        'total_cart_price': total_cart_price,
+        'shipping_charge': shipping_charge,
+        'tax_amount': tax_amount,
+        'grand_total': grand_total,
+        'details':details
+
+    })
+
+@login_required
+def confirmation_page(request):
+    order = Order.objects.last()  # Get the most recent order
+    return render(request, 'order_confirmation.html', {'order': order})
+    
+
+@login_required
+def order_confirmation(request):
+    if request.method == 'POST':
+        address=request.POST.get('address')
+        total_quantity=0
+        total_cart_price=0
+        if address:
+            user=request.user
+            print(address)
+            cart_item=Cart.objects.filter(user=user)
+            if not cart_item.exists():
+                messages.error(request, "Your cart is empty!")
+            order=Order.objects.create(
+                    user=user,
+                    ordered_date=timezone.now(),
+                    address=address
+                )
+
+            for i in cart_item:
+                print(i.quantity)
+                # print(i.id)
+                OrderItem.objects.create(order=order,item=i.item, quantity=i.quantity, size=i.size)
+                # total_price=total_price+(i.item.price*i.quantity)
+                # print(total_price)
+                total_quantity=total_quantity+i.quantity
+            
+            total_cart_price = sum(item.total_price() for item in cart_item)  # Recalculate total price
+            order.total=total_cart_price
+            order.quantity=total_quantity
+            order.total += order.shipping_charge()
+            order.total += order.add_tax()
+            order.shipping=order.shipping_charge()
+            order.tax=order.add_tax()
+            order.save()
+            cart_item.delete()
+            return redirect('confirmation_page')
+        
+        else:
+            messages.error(request,'Please add address to your profile')
+    return redirect('checkout_view')
+
+
+@login_required
+def buy_now(request,id):
+    food_items = Item.objects.get(id=id)
+    user = request.user
+
+    # Check if the item already exists in the cart
+    cart_item, created = Cart.objects.get_or_create(
+        item=food_items,
+        user=user,
+        defaults={'quantity': 1, 'size': 1}  # Initial values for new item
+    )
+    cart_item.shipping_charge()
+    cart_item.save()
+
+    return redirect(cart)
+
+
 
 
 @login_required
@@ -388,16 +430,21 @@ def user_home(request):
     return render(request,'user_home.html')
 
 @login_required
-def user_invoice(request):
-    return render(request,'user_invoice.html')
+def user_invoice(request,id):
+    order=Order.objects.get(id=id)
+    order_item=OrderItem.objects.filter(order_id=order.id)
+    for i in order_item:
+      i.size_oriented_price=i.item.price*i.get_size_price_factor()
+      i.total_price = i.size_oriented_price * i.quantity
+    superuser = User.objects.filter(is_superuser=True).first()
+    subtotal = sum(i.total_price for i in order_item)
+
+    return render(request,'user_invoice.html',locals())
 
 @login_required
 def user_order(request):
     return render(request,'user_order.html')
 
-@login_required
-def user_checkout(request):
-    return render(request,'user_checkout.html')
 
 @login_required
 def user_profile(request):
@@ -450,6 +497,7 @@ def save_address(request):
 
     return render(request, "user_profile.html")
 
+@login_required
 def edit_address(request,id):
     address=Address.objects.get(id=id)
     return render(request,'edit_address.html',locals())

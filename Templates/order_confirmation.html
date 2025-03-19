@@ -264,8 +264,8 @@
                     {% if order %}
                         <p>ORDER ID: {{ order.id }}</p>
                         <p>ORDER AMOUNT: {{ order.total }}</p>
+                    <a href="{% url 'user_invoice' order.id  %}" class="btn" style="color: #000 !important;">Get Invoice</a>
                     {% endif %}
-                    <a href="{% url 'user_invoice' %}" class="btn" style="color: #000 !important;">Get Invoice</a>
                     
                 </div>
             </div>

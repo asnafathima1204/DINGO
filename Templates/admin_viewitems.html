@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="{% static 'assets/css/styles.min.css' %}" />
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <!-- font awesome cdn -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     .alert-warning {
     z-index: 9999;
@@ -66,45 +68,29 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="{% url 'admin_fooditems' %}" aria-expanded="false">
+              <a class="sidebar-link" href="{% url 'admin_order' %}" aria-expanded="false">
                 <span>
-                  <i class="ti ti-shopping-cart"></i>
+                  <i class="ti ti-truck"></i>
+                </span>
+                <span class="hide-menu">Order</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="{% url 'admin_fooditems' %}" aria-expanded="false">
+                <span style="font-size: 21px;">
+                  <i class="fa-solid fa-utensils"></i>
                 </span>
                 <span class="hide-menu">Food Items</span>
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="./ui-alerts.html" aria-expanded="false">
-                <span>
-                  <i class="ti ti-alert-circle"></i>
-                </span>
-                <span class="hide-menu">Alerts</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./ui-card.html" aria-expanded="false">
-                <span>
-                  <i class="ti ti-cards"></i>
-                </span>
-                <span class="hide-menu">Card</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./ui-forms.html" aria-expanded="false">
-                <span>
-                  <i class="ti ti-file-description"></i>
-                </span>
-                <span class="hide-menu">Forms</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="./ui-typography.html" aria-expanded="false">
-                <span>
-                  <i class="ti ti-typography"></i>
-                </span>
-                <span class="hide-menu">Typography</span>
-              </a>
-            </li>
+                <a class="sidebar-link" href="{% url 'admin_user' %}" aria-expanded="false">
+                  <span>
+                    <i class="ti ti-user"></i>
+                  </span>
+                  <span class="hide-menu">User</span>
+                </a>
+              </li>
             <li class="nav-small-cap">
               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
               <span class="hide-menu">AUTH</span>
@@ -243,14 +229,3 @@
 </body>
 
 </html>
-
-          <!-- <div class="container" style="padding: 2rem;">
-            
-                      
-                      
-                      
-                    
-                
-
-      </div>
-        <button type="button" class="btn" style="background:#fd7e14;color:#fff;">Save</button> -->

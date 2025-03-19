@@ -45,6 +45,7 @@ class Cart(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True)
     quantity = models.IntegerField(default=1, null=True, blank=True)
     size = models.CharField(max_length=10, null=True, blank=True)
+    total_price=models.DecimalField(max_length=10,decimal_places=2,null=True,blank=True)
 
     def total_price(self):
         base_price = self.item.price
@@ -57,13 +58,13 @@ class Cart(models.Model):
 
     def get_size_price_factor(self):
         size_mapping = {
-            "S": Decimal("0.5"),  # Small → Half price
-            "M": Decimal("1.0"),  # Medium → Normal price
+            "S": Decimal("1.0"),  # Small → Half price
+            "M": Decimal("1.5"),  # Medium → Normal price
             "R": Decimal("1.0"),  # Regular → Normal price
             "L": Decimal("2.0"),  # Large → Double price
-            "F": Decimal("1.0"),  # Full → Double price
-            "H": Decimal("0.50"),
-            "Q": Decimal("0.25"),  # Quarter → Half price
+            "F": Decimal("2.0"),  # Full → Double price
+            "H": Decimal("1.5"),
+            "Q": Decimal("1.0"),  # Quarter → Half price
         }
         # Return price factor, default to normal price if size not found
         return size_mapping.get(self.size, Decimal("1.0"))
@@ -81,6 +82,7 @@ class Address(models.Model):
     zipcode = models.CharField(max_length=6,null=True,blank=True)
     address_type = models.IntegerField(choices=address_choice,null=True,blank=True)
 
+
     def __str__(self):
         return str(self.user)
 
@@ -91,6 +93,9 @@ class Order(models.Model):
     total = models.DecimalField(max_digits=10,decimal_places=2,null=True,blank=True)
     ordered_date = models.DateTimeField(null=True, blank=True)
     address = models.CharField(max_length=255)
+    tax = models.DecimalField(max_digits=10,decimal_places=2,null=True,blank=True)
+    shipping = models.DecimalField(max_digits=10,decimal_places=2,null=True,blank=True)
+    
 
     def __str__(self):
         return self.order_id
@@ -102,6 +107,8 @@ class Order(models.Model):
     def add_tax(self):
         total_price = self.total or Decimal("0.00")
         return Decimal("21.99") if total_price > Decimal("500.00") else Decimal("0.00")
+    
+    
            
     
 class OrderItem(models.Model):
@@ -109,6 +116,22 @@ class OrderItem(models.Model):
     item=models.ForeignKey(Item,on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1, null=True, blank=True)
     size = models.CharField(max_length=10, null=True, blank=True)
+    total_price=models.DecimalField(max_digits=10,decimal_places=2,null=True,blank=True)
+    size_oriented_price=models.DecimalField(max_digits=10,decimal_places=2,null=True,blank=True)
+
+
+    def get_size_price_factor(self):
+        size_mapping = {
+            "S": Decimal("1.0"),  # Small → Half price
+            "M": Decimal("1.5"),  # Medium → Normal price
+            "R": Decimal("1.0"),  # Regular → Normal price
+            "L": Decimal("2.0"),  # Large → Double price
+            "F": Decimal("2.0"),  # Full → Double price
+            "H": Decimal("1.5"),
+            "Q": Decimal("1.0"),  # Quarter → Half price
+        }
+        # Return price factor, default to normal price if size not found
+        return size_mapping.get(self.size, Decimal("1.0"))
 
     def __str__(self):
         return self.id

@@ -6,9 +6,10 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Dingo</title>
+    <title>cart</title>
     <link rel="icon" href="{% static 'img/favicon.png' %}">
     <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <!-- animate CSS -->
     <link rel="stylesheet" href="{% static 'css/animate.css' %}">
@@ -20,6 +21,7 @@
     <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
     <!-- font awesome CSS -->
     <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- swiper CSS -->
     <link rel="stylesheet" href="{% static 'css/slick.css' %}">
     <link rel="stylesheet" href="{% static 'css/gijgo.min.css' %}">
@@ -29,7 +31,45 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <link rel="stylesheet" href="{% static 'css/user.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+
     <style>
+        
+        /* .alert-box {
+            position: relative;
+            background-color: #f8d7da;
+            color: #842029;
+            padding: 1rem;
+            border: 1px solid #f5c2c7;
+            border-radius: 5px;
+            height: 10vh;
+            margin-bottom: 20px;
+        } */
+
+        /* .alert-box .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        } */
+
+        /* #alert-container {
+        position: relative;
+        top: 0;
+        left: 0;
+        height: 10vh;
+        width: 100%;
+        z-index: 1050; 
+        } */
+
+        /* .alert {
+            margin: 0;
+            border-radius: 0;
+            padding: 1rem;
+        } */
         /* Container for the buttons */
         .buttons-container {
         display: flex;
@@ -187,6 +227,19 @@
 </head>
 
 <body>
+
+    <!-- Alert Box -->
+    <div id="alert-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
     <!--::header part start::-->
     <header class="main_menu">
         <div class="container">
@@ -401,7 +454,7 @@
                                                             {% if request.user.is_active == 1 %}
                                                             <div class="buttons-container">
                                                                 <a class="add-to-cart" href="{% url 'add_cart' i.id %}">Add to Cart</a>
-                                                                <a class="buy-now" href="">Buy Now</a>
+                                                                <a class="buy-now" href="{% url 'buynow' i.id %}">Buy Now</a>
                                                             </div>
                                                            
                                                             {% else %}
@@ -436,7 +489,7 @@
                                                             {% if request.user.is_active == 1 %}
                                                             <div class="buttons-container">
                                                                 <a class="add-to-cart" href="{% url 'add_cart' i.id %}">Add to Cart</a>
-                                                                <a class="buy-now" href="">Buy Now</a>
+                                                                <a class="buy-now" href="{% url 'buynow' i.id %}">Buy Now</a>
                                                             </div>
                                                             {% else %}
                                                             <div class="buttons-container">
@@ -482,7 +535,7 @@
                                                             {% if request.user.is_active == 1 %}
                                                             <div class="buttons-container">
                                                                 <a class="add-to-cart"href="{% url 'add_cart' i.id %}">Add to Cart</a>
-                                                                <a class="buy-now" href="">Buy Now</a>
+                                                                <a class="buy-now" href="{% url 'buynow' i.id %}">Buy Now</a>
                                                             </div>
                                                             {% else %}
                                                             <div class="buttons-container">
@@ -516,7 +569,7 @@
                                                             {% if request.user.is_active == 1 %}
                                                             <div class="buttons-container">
                                                                 <a class="add-to-cart" href="{% url 'add_cart' i.id %}">Add to Cart</a>
-                                                                <a class="buy-now" href="">Buy Now</a>
+                                                                <a class="buy-now" href="{% url 'buynow' i.id %}">Buy Now</a>
                                                             </div>
                                                             {% else %}
                                                             <div class="buttons-container">
