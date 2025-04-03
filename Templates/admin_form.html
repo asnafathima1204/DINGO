@@ -47,6 +47,14 @@
                     </select>
                   </div>
                   <div class="form-group">
+                     <label>Exclusive Item:</label>
+                     <select name="exclusive_item" class="form-control" id="exclusive_item">
+                      <option value="False">No</option>
+                      <option value="True" >Yes</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
                     <label for="image">Image:</label>
                     <input type="file" class="form-control-file" id="image" name="image">
                 </div>  
@@ -104,14 +112,21 @@
                   <label for="name">Name:</label>
                   <input type="text" class="form-control" id="name" name="name" value="{{ i.name }}">
                 </div>
-                 <div class="form-group">
+                <div class="form-group">
                      <label>Category Type:</label>
                      <select name="category_type" class="form-control" id="category_type">
                         <option value="1" >Category1(S,M,L)</option>
                         <option value="2" >Category2(Quarter,Half,Full)</option>
                         <option value="3" >Category3(regular,large)</option>
                     </select>
-                 </div>
+                </div>
+                <div class="form-group">
+                    <label>Exclusive Item:</label>
+                    <select name="exclusive_item" class="form-control" id="exclusive_item">
+                      <option value="False" {% if not i.exclusive_item %}selected{% endif %}>No</option>
+                      <option value="True" {% if i.exclusive_item %}selected{% endif %}>Yes</option>
+                    </select>
+                </div>
                 <div class="form-group">
                   <label for="image">Image:</label>
                   <input type="file" class="form-control-file" id="image" name="image">
@@ -124,6 +139,120 @@
             </div>
           </form>
           {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+  
+
+
+<!-- Modal Chef-->
+<div class="modal fade" id="chefForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Item Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{% url 'admin_addchef' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-lg-6">
+                  <div class="form-group">
+                      <label for="chef_id">Chef's ID:</label>
+                      <input type="text" class="form-control" id="chef_id" name="chef_id">
+                  </div>
+                  <div class="form-group">
+                      <label for="experience">Experience:</label>
+                      <input type="number" class="form-control" id="experience" name="experience">
+                  </div>
+                  <div class="form-group">
+                    <label for="bio">Bio:</label>
+                    <textarea class="form-control" id="bio" rows="3" name="bio"></textarea>
+                  </div>  
+              </div>
+              <div class="col-lg-6">
+                  <div class="form-group ">
+                      <label for="name">Name:</label>
+                      <input type="text" class="form-control" id="name" name="name">
+                  </div>
+                  <div class="form-group">
+                      <label for="specialty">Specialty:</label>
+                      <input type="text" class="form-control" id="specialty" name="specialty">
+                  </div>
+                  <div class="form-group">
+                    <label for="image">Image:</label>
+                    <input type="file" class="form-control-file" id="image" name="image">
+                  </div> 
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn" style="background:#fd7e14;color:#fff;">Save</button>
+            </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+  <!-- update Chef form -->
+  <div class="modal fade" id="chefUpdateForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Update Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            {% if chef.id %}
+            <form method="post" action="{% url 'admin_editchef' chef.id %}" enctype="multipart/form-data">
+            {% else %}
+            <form method="post" action="#">  <!-- Fallback to avoid error -->
+            {% endif %}
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-lg-6">
+                  <div class="form-group">
+                    <h1>{{chefs.id}}</h1>
+                      <label for="chef_id">Chef's ID:</label>
+                      <input type="text" class="form-control" id="chef_id" name="chef_id" value="{{ chef.chef_id }}">
+                  </div>
+                  <div class="form-group">
+                      <label for="experience">Experience:</label>
+                      <input type="number" class="form-control" id="experience" name="experience" value="{{ chef.experience }}">
+                  </div>
+                  <div class="form-group">
+                    <label for="bio">Bio:</label>
+                    <textarea class="form-control" id="bio" rows="3" name="bio">{{ chef.bio }}</textarea>
+                  </div>  
+              </div>
+              <div class="col-lg-6">
+                  <div class="form-group ">
+                      <label for="name">Name:</label>
+                      <input type="text" class="form-control" id="name" name="name" value="{{ chef.name }}">
+                  </div>
+                  <div class="form-group">
+                      <label for="specialty">Specialty:</label>
+                      <input type="text" class="form-control" id="specialty" name="specialty" value="{{ chef.specialty }}">
+                  </div>
+                  <div class="form-group">
+                    <label for="image">Image:</label>
+                    <input type="file" class="form-control-file" id="image" name="image" value="{{ chefs.image}}">
+                  </div> 
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn" style="background:#fd7e14;color:#fff;">Save</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

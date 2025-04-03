@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 size_choice ={
     1: [("S", "Small"), ("M", "Medium"), ("L", "Large")],
     2: [("Q", "Quarter"), ("H", "Half"), ("F", "Full")],
@@ -20,6 +21,30 @@ address_choice =(
     (2,"temporary")
 )
 
+status_choice = (
+        ('pending', 'Pending'),
+        ('shipped', 'Shipped'),
+        ('delivered', 'Delivered'),
+        ('cancelled', 'Cancelled'),
+)
+
+reservation_choice = (
+        ('pending', 'Pending'),
+        ('confirmed', 'confirmed'),
+        ('cancelled', 'Cancelled'),
+)
+
+time_choice = (
+    ('08:00 AM to 10:00 AM', '08:00 AM to 10:00 AM'),
+    ('10:00 AM to 12:00 PM', '10:00 AM to 12:00 PM'),
+    ('12:00 PM to 02:00 PM', '12:00 PM to 02:00 PM'),
+    ('02:00 PM to 04:00 PM', '02:00 PM to 04:00 PM'),
+    ('04:00 PM to 06:00 PM', '04:00 PM to 06:00 PM'),
+    ('06:00 PM to 08:00 PM', '06:00 PM to 08:00 PM'),
+    ('08:00 PM to 10:00 PM', '08:00 PM to 10:00 PM'),
+    ('10:00 PM to 12:00 AM', '10:00 PM to 12:00 AM'),
+)
+
 
 # Create your models here.
 class Item(models.Model):
@@ -30,6 +55,7 @@ class Item(models.Model):
     category_type = models.IntegerField(choices=category_choice, null=True, blank=True)
     category = models.CharField(max_length=255,null=True,blank=True)
     price = models.DecimalField(max_digits=10,decimal_places=2,null=True,blank=True)
+    exclusive_item = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -95,11 +121,9 @@ class Order(models.Model):
     address = models.CharField(max_length=255)
     tax = models.DecimalField(max_digits=10,decimal_places=2,null=True,blank=True)
     shipping = models.DecimalField(max_digits=10,decimal_places=2,null=True,blank=True)
+    status = models.CharField(max_length=100,choices=status_choice,default='pending')
     
 
-    def __str__(self):
-        return self.order_id
-    
     def shipping_charge(self):
         total_price = self.total or Decimal("0.00")
         return Decimal("50.00") if total_price > Decimal("500.00") else Decimal("10.00")
@@ -108,7 +132,8 @@ class Order(models.Model):
         total_price = self.total or Decimal("0.00")
         return Decimal("21.99") if total_price > Decimal("500.00") else Decimal("0.00")
     
-    
+    def __str__(self):
+        return f"Order #{self.id} - {self.user.username}" 
            
     
 class OrderItem(models.Model):
@@ -134,9 +159,41 @@ class OrderItem(models.Model):
         return size_mapping.get(self.size, Decimal("1.0"))
 
     def __str__(self):
-        return self.id
+        return
 
+class Chef(models.Model):
+    chef_id=models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
+    specialty = models.CharField(max_length=100)
+    experience = models.IntegerField()  # in years
+    image = models.ImageField(upload_to='chefs/')  # for profile picture
+    bio = models.TextField(blank=True, null=True)
 
+    def __str__(self):
+        return self.name
+    
+class Reservation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    guest = models.IntegerField()
+    phone = models.CharField(max_length=15)
+    date = models.DateField()
+    time = models.CharField(choices=time_choice,max_length=100)
+    note = models.TextField()
+    status = models.CharField(max_length=100,choices=reservation_choice,default='pending')
 
+    def __str__(self):
+        return f"{self.name} - {self.date} at {self.time}"
+    
+class Contact(models.Model):
+    name = models.CharField(max_length=155)
+    email = models.EmailField()
+    phone = models.CharField(max_length=155,null=True)
+    subject = models.CharField(max_length=255,blank=True,null=True)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+            return f"{self.name} - {self.email}"
 

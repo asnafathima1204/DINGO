@@ -18,6 +18,8 @@
 .user_dropdown:hover .eg-link i{
     color: #000;
 }
+
+
 .user_dropdown .eg-link {
     background: #fff;
     padding: 15px 20px;
@@ -34,11 +36,8 @@
     height: 38px;
     align-content: center;
 }
-.menu_fixed .cart,
-.menu_fixed .eg-link{
-    
+.menu_fixed .cart{
     border: 2px solid #ff6426;
-
 }
 /* .user_dropdown a{
     padding: 16px 20px;

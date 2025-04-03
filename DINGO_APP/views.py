@@ -5,13 +5,50 @@ from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-
+from .models import time_choice  # Import the choices from models
+from datetime import datetime
 
 
 # Create your views here.
 
 def index(request):
-    return render(request,'index.html')
+    exclusive_item = Item.objects.filter(exclusive_item=True)
+    chefs=Chef.objects.all()
+    selected_category = request.GET.get('category', 'All')  # Default to 'All' if no category is selected
+    all_categories = Item.objects.values_list('category', flat=True).distinct().order_by('category')
+
+    for i in all_categories:
+        print(i)
+    food_items = Item.objects.all()
+    half_length = len(food_items) // 2
+    if (len(food_items)) % 2 == 0:
+        half_length = half_length
+        print(half_length)
+    else:
+        half_length += 1
+        print(half_length)
+    # for i in food_items:
+    #     print(i.name)
+    # using dict format : each data items pass as dictionaries
+    # return render(request,'food_menu.html',{'food_items':food_items})
+    # using locals() : automatically pass all variables into html
+    time_choice = Reservation._meta.get_field('time').choices
+
+    return render(request, 'index.html',locals())
+
+def items_filter(request,category):
+    selected_category = request.GET.get('category', category)  # Default to 'All' if no category is selected
+    selected_items = Item.objects.filter(category=category)  # Get food items from the database
+    all_categories = Item.objects.values_list('category', flat=True).distinct().order_by('category')
+
+    half_length = len(selected_items) // 2
+    if (len(selected_items)) % 2 == 0:
+        half_length = half_length
+        print(half_length)
+    else:
+        half_length += 1
+        print(half_length)
+    return render(request, 'index.html', locals())
 
 
 def about(request):
@@ -19,15 +56,29 @@ def about(request):
 
 
 def contact(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        phone = request.POST.get("phone")
+        subject = request.POST.get("subject")
+        message = request.POST.get("message")
+        created_at = request.POST.get("created_at")
+
+        contacts=Contact.objects.create(
+            name=name,
+            email=email,
+            phone=phone,
+            subject=subject,
+            message=message,
+            created_at=created_at
+        )
+        
     return render(request,'contact.html')
 
 
 def chefs(request):
-    return render(request,'chefs.html')
-
-
-def elements(request):
-    return render(request,'elements.html')
+    chefs=Chef.objects.all()
+    return render(request,'chefs.html',locals())
 
 
 def food_menu(request):
@@ -83,6 +134,15 @@ def blog(request):
 def single_blog(request):
     return render(request,'single-blog.html')
 
+def exclusive_item(request):
+    # Filter exclusive items
+    exclusive_item = Item.objects.filter(exclusive_item=True)
+    return render(request, 'index.html', {'exclusive_item': exclusive_item})
+
+def view_item(request,id):
+    exclusive_item = Item.objects.get(id=id)
+    return render(request,'view_item.html',locals())
+
 
 
 # ---------admin module----------------------------
@@ -111,6 +171,7 @@ def admin_additems(request):
         price = request.POST.get("price").title()
         description = request.POST.get("description")
         image = request.FILES.get("image")
+        exclusive_item = request.POST.get('exclusive_item')
 
         item_exists = Item.objects.filter(item_id=item_id).exists()
 
@@ -125,7 +186,8 @@ def admin_additems(request):
                                       category_type=category_type,
                                       price=price,
                                       description=description,
-                                      image=image
+                                      image=image,
+                                      exclusive_item=exclusive_item
                                       )
 
             data.save()
@@ -155,6 +217,7 @@ def admin_edititems(request, id):
         price = request.POST.get("price")
         description = request.POST.get("description")
         image = request.FILES.get("image")
+        exclusive_item = request.POST.get('exclusive_item')
 
         # Check if an item with the same item_id already exists (excluding current item)
         existing_item = Item.objects.filter(item_id=item_id).exclude(id=id).first()
@@ -168,6 +231,7 @@ def admin_edititems(request, id):
         instance.category = category
         instance.price = price
         instance.description = description
+        instance.exclusive_item = exclusive_item
 
 
         if image:
@@ -221,6 +285,98 @@ def toggle_user_status(request, user_id):
     user.save()
 
     return redirect('admin_user') 
+
+@login_required
+def admin_chef(request):
+    chefs=Chef.objects.all()
+    return render(request,'admin_chef.html',locals())
+
+@login_required
+def admin_viewchef(request,id):
+    chef=Chef.objects.get(id=id)
+    return render(request,'admin_viewchef.html',locals())
+
+
+@login_required
+def admin_addchef(request):
+    if request.method=="POST":
+        chef_id = request.POST.get("chef_id")
+        name = request.POST.get("name")
+        specialty = request.POST.get("specialty")
+        experience = request.POST.get("experience")
+        image = request.FILES.get("image")
+        bio = request.POST.get("bio")
+
+        chef_exists = Chef.objects.filter(chef_id=chef_id).exists()
+
+        if chef_exists:
+            messages.warning(request, "Chef already exists..!")
+            return redirect(admin_chef)
+        else:
+
+            chefs = Chef.objects.create(chef_id=chef_id,
+                                        name=name,
+                                        specialty=specialty,
+                                        experience=experience,
+                                        image=image,
+                                        bio=bio
+                                       )
+
+            chefs.save()
+            messages.success(request, "Chef added")
+            return redirect(admin_chef)
+
+    else:
+        messages.warning(request, "Something went wrong")
+        return redirect(admin_chef)
+
+def admin_editchef(request,id):
+    chef=Chef.objects.get(id=id)
+    print(chef.id)
+    if request.method=='POST':
+        chef.chef_id = request.POST.get('chef_id')
+        chef.name = request.POST.get('name')
+        chef.specialty = request.POST.get('specialty')
+        chef.experience = request.POST.get('experience')
+        chef.image = request.FILES.get('image')
+        chef.bio = request.POST.get('bio')
+        
+        chef.save()
+        return redirect('admin_viewchef',chef.id)
+
+    return redirect('admin_chef',chef.id)
+
+@login_required
+def admin_deletechef(request,id):
+    if request.method == "POST":
+            chef = Chef.objects.filter(id=id)
+            chef.delete()
+            messages.success(request, "Chef deleted successfully!")
+            return redirect(admin_chef)
+
+@login_required
+def admin_reservation(request):
+    reservation = Reservation.objects.all().order_by('date')
+    if request.method == "POST":
+        # Handle form submission
+        reservation_id = request.POST.get('reservation_id')
+        new_status = request.POST.get('status')
+        
+        try:
+            reserve = Reservation.objects.get(id=reservation_id)
+            reserve.status = new_status
+            reserve.save()
+            print(reserve.status)
+            messages.success(request, f"Reservation {reservation_id} status updated to {new_status}.")
+        except Order.DoesNotExist:
+            messages.error(request, "Reservation not found.")
+            return redirect('dashboard')
+    return render(request,"admin_reservation.html",locals())
+
+def admin_contact(request):
+    contacts = Contact.objects.all()
+    print(contacts)
+    return render(request,'admin_contact.html',{'contacts':contacts})
 
 
 # ------user module -------------------
@@ -306,6 +462,7 @@ def decrement_quantity(request, id):
 @login_required
 def update_size(request, id):
     size = request.GET.get('size')
+    # print(size)
     cart_data = Cart.objects.get(id=id)
     cart_data.size = size
     cart_data.save()
@@ -427,7 +584,61 @@ def buy_now(request,id):
 
 @login_required
 def user_home(request):
-    return render(request,'user_home.html')
+    if request.method == 'POST':
+        name=request.POST.get('name')
+        email=request.POST.get('email')
+        guest=request.POST.get('guest')
+        phone=request.POST.get('phone')
+        date=request.POST.get('date')
+        time=request.POST.get('time')
+        note=request.POST.get('note')
+        print(name)
+        user=request.user
+        date = datetime.strptime(date, "%m/%d/%Y").strftime("%Y-%m-%d")  # Convert MM/DD/YYYY to YYYY-MM-DD
+        reservation = Reservation.objects.create(
+                name=name,
+                email=email,
+                guest=guest,
+                phone=phone,
+                date=date,
+                time=time,
+                note=note,
+                user=user
+            )
+
+        reservation.save()
+        print(reservation)
+        messages.success(request,"Reservation successful!")
+        return redirect('user_home')
+    
+
+        
+
+    exclusive_item = Item.objects.filter(exclusive_item=True)
+    chefs=Chef.objects.all()
+    selected_category = request.GET.get('category', 'All')  # Default to 'All' if no category is selected
+    all_categories = Item.objects.values_list('category', flat=True).distinct().order_by('category')
+
+    for i in all_categories:
+        print(i)
+    food_items = Item.objects.all()
+    half_length = len(food_items) // 2
+    if (len(food_items)) % 2 == 0:
+        half_length = half_length
+        print(half_length)
+    else:
+        half_length += 1
+        print(half_length)
+
+
+    # for i in food_items:
+    #     print(i.name)
+    # using dict format : each data items pass as dictionaries
+    # return render(request,'food_menu.html',{'food_items':food_items})
+    # using locals() : automatically pass all variables into html
+    time_choice = Reservation._meta.get_field('time').choices
+
+    return render(request, 'user_home.html', locals())
 
 @login_required
 def user_invoice(request,id):
@@ -443,12 +654,57 @@ def user_invoice(request,id):
 
 @login_required
 def user_order(request):
-    return render(request,'user_order.html')
+    orders=Order.objects.filter(user=request.user)
+    print(orders)
+    return render(request,'user_order.html',locals())
 
+def cancel_order(request,id):
+    order=Order.objects.get(id=id)
+    order.status="cancelled"
+    order.save()
+    return redirect(user_order)
+
+def admin_order_list(request):
+     # Display orders with status
+    orders = Order.objects.all().order_by('ordered_date')
+    if request.method == "POST":
+        # Handle form submission
+        order_id = request.POST.get('order_id')
+        new_status = request.POST.get('status')
+        
+        try:
+            order = Order.objects.get(id=order_id)
+            order.status = new_status
+            order.save()
+            
+            messages.success(request, f"Order {order_id} status updated to {new_status}.")
+        except Order.DoesNotExist:
+            messages.error(request, "Order not found.")
+        
+        return redirect('admin_order_list')
+
+   
+    
+    return render(request, 'admin_order.html', {'order': orders})
+
+@login_required
+def user_reservation(request):
+    reservation=Reservation.objects.filter(user=request.user)
+    return render(request,'user_reservation.html',locals())
+
+def cancel_reservation(request,id):
+    reservation=Reservation.objects.get(id=id)
+    reservation.status="cancelled"
+    reservation.save()
+    return redirect(user_reservation)
 
 @login_required
 def user_profile(request):
-    user_details = User.objects.filter(id=request.user.id)
+    user_details=request.user
+    order=Order.objects.filter(user=user_details).order_by('-ordered_date').first()
+    order_item=OrderItem.objects.filter(order=order)
+    for i in order_item:
+      i.price_per_items=i.item.price** i.quantity*i.get_size_price_factor()
     # for i in user_details:
     #     print(i.first_name)
     #     print(i.last_name)
@@ -542,8 +798,6 @@ def delete_address(request,id):
             data.delete()
             messages.success(request, "Address deleted successfully!")
             return redirect(user_profile)
-
-
 
 
 
