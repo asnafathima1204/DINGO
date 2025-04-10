@@ -1,6 +1,7 @@
 {% extends "extend.html" %}
 {% load static %}
 {% block title %}User home{% endblock %}
+{% block style %}
 {% block content %}
     
 <!-- banner part start-->
@@ -29,9 +30,10 @@
     <!-- banner part start-->
 
        <!--::exclusive_item_part start::-->
+       
+       {% if exclusive_item %}
        <section class="exclusive_item_part blog_item_section">
         <div class="container">
-        {% if exclusive_item %}
             <div class="row">
                 <div class="col-xl-5">
                     <div class="section_tittle">
@@ -55,9 +57,9 @@
                 </div>
                 {% endfor %}
             </div>
-        {% endif %}
         </div>
        </section>
+       {% endif %}
        <!--::exclusive_item_part end::-->
 
     <!-- about part start-->
@@ -95,192 +97,191 @@
                         <h2>Delicious Food Menu</h2>
                     </div>
                 </div>
-                <div class="col-lg-8 d-flex flex-column align-items-center justify-content-center">
-                    <div class="nav nav-tabs food_menu_nav" id="myTab" role="tablist">
-                        <div class="row justify-content-between align-items-center">
-                            <!-- "All" Tab -->
-                            <div class="col">
-                                <a class="{% if selected_category == 'All' %}active{% endif %}" 
-                                href="{% url 'food_menu' %}" aria-selected="{% if selected_category == 'All' %}true{% else %}false{% endif %}">
-                                    All <img src="{% static 'img/icon/play.svg' %}" alt="play">
-                                </a>
+                    <div class="col-lg-8 d-flex flex-column align-items-center justify-content-center">
+                        <div class="nav nav-tabs food_menu_nav" id="myTab" role="tablist">
+                            <div class="row justify-content-between align-items-center">
+                                <!-- "All" Tab -->
+                                <div class="col">
+                                    <a 
+                                    href="{% url 'food_menu' %}" aria-selected="{% if selected_category == 'All' %}true{% else %}false{% endif %}">
+                                        All
+                                    </a>
+                                </div>
+                    
+                                <!-- Loop Through Categories -->
+                                {% for i in all_categories %}
+                                <div class="col text-nowrap">
+                                    <a href="{% url 'item_filter' i %}" >
+                                        {{ i }}
+                                    </a>
+                                </div>
+                                {% endfor %}
                             </div>
-                
-                            <!-- Loop Through Categories -->
-                            {% for i in all_categories %}
-                            <div class="col text-nowrap">
-                                <a href="{% url 'item_filter' i %}" >
-                                    {{ i }} <img src="{% static 'img/icon/play.svg' %}" alt="play">
-                                </a>
-                            </div>
-                            {% endfor %}
                         </div>
                     </div>
-                </div>
                 
                 
-                {% if selected_items %}
-                <div class="col-lg-12">
-                    <div class="tab-content" id="myTabContent">
-                        <div class="tab-pane fade show active single-member" id="Special" role="tabpanel"
-                            aria-labelledby="Special-tab">
-                                <div class="scrollable-container">
-                                    <div class="row">
-                                        <!-- Left Column -->
-                                        <div class="col-sm-6 col-lg-6">
-                                            {% for i in selected_items %}
-                                                {% if forloop.counter <= half_length %}
-                                                    <div class="single_food_item media" style="align-items: center;">
-                                                        <img src="{{ i.image.url }}" class="mr-3" alt="..." >
-                                                        <div class="media-body">
-                                                            <h3>{{ i.name }}</h3>
-                                                            <p id="text-{{ forloop.counter }}">
-                                                                {{ i.description|slice:":30" }} <!-- First 30 characters -->
-                                                                <span id="dots-{{ forloop.counter }}">...</span>
-                                                                <span id="more-{{ forloop.counter }}" style="display: none;">
-                                                                    {{ i.description|slice:"30:" }} <!-- Remaining description -->
-                                                                </span>
-                                                                <a href="javascript:void(0);" class="read-more-btn" onclick="toggleReadMore({{ forloop.counter }})">Read More</a>
-                                                            </p>
-                                                            <h5>₹{{ i.price }}</h5>
-                                                            {% if request.user.is_active == 1 %}
-                                                            <div class="buttons-container">
-                                                                <a class="add-to-cart" href="{% url 'add_cart' i.id %}">Add to Cart</a>
-                                                                <a class="buy-now" href="{% url 'buynow' i.id %}">Buy Now</a>
+                    {% if selected_items %}
+                    <div class="col-lg-12">
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active single-member" id="Special" role="tabpanel"
+                                aria-labelledby="Special-tab">
+                                    <div class="scrollable-container">
+                                        <div class="row">
+                                            <!-- Left Column -->
+                                            <div class="col-sm-6 col-lg-6">
+                                                {% for i in selected_items %}
+                                                    {% if forloop.counter <= half_length %}
+                                                        <div class="single_food_item media" style="align-items: center;">
+                                                            <img src="{{ i.image.url }}" class="mr-3" alt="..." >
+                                                            <div class="media-body">
+                                                                <h3>{{ i.name }}</h3>
+                                                                <p id="text-{{ forloop.counter }}">
+                                                                    {{ i.description|slice:":10" }} <!-- First 30 characters -->
+                                                                    <span id="dots-{{ forloop.counter }}">...</span>
+                                                                    <span id="more-{{ forloop.counter }}" style="display: none;">
+                                                                        {{ i.description|slice:"10:" }} <!-- Remaining description -->
+                                                                    </span>
+                                                                    <a href="javascript:void(0);" class="read-more-btn" onclick="toggleReadMore({{ forloop.counter }})">Read More</a>
+                                                                </p>
+                                                                <h5>₹{{ i.price }}</h5>
+                                                                {% if request.user.is_active == 1 %}
+                                                                <div class="buttons-container">
+                                                                    <a class="add-to-cart" href="{% url 'add_cart' i.id %}">Add to Cart</a>
+                                                                    <a class="buy-now" href="{% url 'buynow' i.id %}">Buy Now</a>
+                                                                </div>
+                                                            
+                                                                {% else %}
+                                                                <div class="buttons-container">
+                                                                    <a class="add-to-cart" data-bs-toggle="modal" data-bs-target="#loginModal">Add to Cart</a>
+                                                                    <a class="buy-now" data-bs-toggle="modal" data-bs-target="#loginModal">Buy Now</a>
+                                                                </div>
+                                                                {% endif %}
                                                             </div>
-                                                        
-                                                            {% else %}
-                                                            <div class="buttons-container">
-                                                                <a class="add-to-cart" data-bs-toggle="modal" data-bs-target="#loginModal">Add to Cart</a>
-                                                                <a class="buy-now" data-bs-toggle="modal" data-bs-target="#loginModal">Buy Now</a>
-                                                            </div>
-                                                            {% endif %}
                                                         </div>
-                                                    </div>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
 
-                                        <!-- Right Column -->
-                                        <div class="col-sm-6 col-lg-6">
-                                            {% for i in selected_items %}
-                                                {% if forloop.counter > half_length %}
-                                                    <div class="single_food_item media" style="align-items: center;">
-                                                        <img src="{{ i.image.url }}" class="mr-3" alt="..." style="width: fit-content;height: 40vh;">
-                                                        <div class="media-body">
-                                                            <h3>{{ i.name }}</h3>
-                                                            <p id="text-{{ forloop.counter }}">
-                                                                {{ i.description|slice:":30" }} <!-- First 30 characters -->
-                                                                <span id="dots-{{ forloop.counter }}">...</span>
-                                                                <span id="more-{{ forloop.counter }}" style="display: none;">
-                                                                    {{ i.description|slice:"30:" }} <!-- Remaining description -->
-                                                                </span>
-                                                                <a href="javascript:void(0);" class="read-more-btn" onclick="toggleReadMore({{ forloop.counter }})">Read More</a>
-                                                            </p>
-                                                            <h5>₹{{ i.price }}</h5>
-                                                            {% if request.user.is_active == 1 %}
-                                                            <div class="buttons-container">
-                                                                <a class="add-to-cart" href="{% url 'add_cart' i.id %}">Add to Cart</a>
-                                                                <a class="buy-now" href="{% url 'buynow' i.id %}">Buy Now</a>
+                                            <!-- Right Column -->
+                                            <div class="col-sm-6 col-lg-6">
+                                                {% for i in selected_items %}
+                                                    {% if forloop.counter > half_length %}
+                                                        <div class="single_food_item media" style="align-items: center;">
+                                                            <img src="{{ i.image.url }}" class="mr-3" alt="..." style="width: fit-content;height: 40vh;">
+                                                            <div class="media-body">
+                                                                <h3>{{ i.name }}</h3>
+                                                                <p id="text-{{ forloop.counter }}">
+                                                                    {{ i.description|slice:":10" }} <!-- First 30 characters -->
+                                                                    <span id="dots-{{ forloop.counter }}">...</span>
+                                                                    <span id="more-{{ forloop.counter }}" style="display: none;">
+                                                                        {{ i.description|slice:"10:" }} <!-- Remaining description -->
+                                                                    </span>
+                                                                    <a href="javascript:void(0);" class="read-more-btn" onclick="toggleReadMore({{ forloop.counter }})">Read More</a>
+                                                                </p>
+                                                                <h5>₹{{ i.price }}</h5>
+                                                                {% if request.user.is_active == 1 %}
+                                                                <div class="buttons-container">
+                                                                    <a class="add-to-cart" href="{% url 'add_cart' i.id %}">Add to Cart</a>
+                                                                    <a class="buy-now" href="{% url 'buynow' i.id %}">Buy Now</a>
+                                                                </div>
+                                                                {% else %}
+                                                                <div class="buttons-container">
+                                                                    <a class="add-to-cart" data-bs-toggle="modal" data-bs-target="#loginModal">Add to Cart</a>
+                                                                    <a class="buy-now" data-bs-toggle="modal" data-bs-target="#loginModal">Buy Now</a>
+                                                                </div>
+                                                                {% endif %}
                                                             </div>
-                                                            {% else %}
-                                                            <div class="buttons-container">
-                                                                <a class="add-to-cart" data-bs-toggle="modal" data-bs-target="#loginModal">Add to Cart</a>
-                                                                <a class="buy-now" data-bs-toggle="modal" data-bs-target="#loginModal">Buy Now</a>
-                                                            </div>
-                                                            {% endif %}
                                                         </div>
-                                                    </div>
-                                                {% endif %}
-                                            {% endfor %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {% else %}
-                <div class="col-lg-12">
-                    <div class="tab-content" id="myTabContent">
-                        <div class="tab-pane fade show active single-member" id="Special" role="tabpanel"
-                            aria-labelledby="Special-tab">
-                                <div class="scrollable-container">
-                                    <div class="row">
-                                        <!-- Left Column -->
-                                        <div class="col-sm-6 col-lg-6">
-                                            {% for i in food_items %}
-                                                {% if forloop.counter <= half_length %}
-                                                    <div class="single_food_item media" style="align-items: center;">
-                                                        <img src="{{ i.image.url }}" class="mr-3" alt="..." >
-                                                        <div class="media-body">
-                                                            <h3>{{ i.name }}</h3>
-                                                            <p id="text-{{ forloop.counter }}">
-                                                                {{ i.description|slice:":30" }} <!-- First 30 characters -->
-                                                                <span id="dots-{{ forloop.counter }}">...</span>
-                                                                <span id="more-{{ forloop.counter }}" style="display: none;">
-                                                                    {{ i.description|slice:"30:" }} <!-- Remaining description -->
-                                                                </span>
-                                                                <a href="javascript:void(0);" class="read-more-btn" onclick="toggleReadMore({{ forloop.counter }})">Read More</a>
-                                                            </p>
-                                                            <h5>₹{{ i.price }}</h5>
-                                                            {% if request.user.is_active == 1 %}
-                                                            <div class="buttons-container">
-                                                                <a class="add-to-cart"href="{% url 'add_cart' i.id %}">Add to Cart</a>
-                                                                <a class="buy-now" href="{% url 'buynow' i.id %}">Buy Now</a>
+                    {% else %}
+                    <div class="col-lg-12">
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active single-member" id="Special" role="tabpanel"
+                                aria-labelledby="Special-tab">
+                                    <div class="scrollable-container">
+                                        <div class="row">
+                                            <!-- Left Column -->
+                                            <div class="col-sm-6 col-lg-6">
+                                                {% for i in food_items %}
+                                                    {% if forloop.counter <= half_length %}
+                                                        <div class="single_food_item media" style="align-items: center;">
+                                                            <img src="{{ i.image.url }}" class="mr-3" alt="..." >
+                                                            <div class="media-body">
+                                                                <h3>{{ i.name }}</h3>
+                                                                <p id="text-{{ forloop.counter }}">
+                                                                    {{ i.description|slice:":10" }} <!-- First 30 characters -->
+                                                                    <span id="dots-{{ forloop.counter }}">...</span>
+                                                                    <span id="more-{{ forloop.counter }}" style="display: none;">
+                                                                        {{ i.description|slice:"10:" }} <!-- Remaining description -->
+                                                                    </span>
+                                                                    <a href="javascript:void(0);" class="read-more-btn" onclick="toggleReadMore({{ forloop.counter }})">Read More</a>
+                                                                </p>
+                                                                <h5>₹{{ i.price }}</h5>
+                                                                {% if request.user.is_active == 1 %}
+                                                                <div class="buttons-container">
+                                                                    <a class="add-to-cart"href="{% url 'add_cart' i.id %}">Add to Cart</a>
+                                                                    <a class="buy-now" href="{% url 'buynow' i.id %}">Buy Now</a>
+                                                                </div>
+                                                                {% else %}
+                                                                <div class="buttons-container">
+                                                                    <a class="add-to-cart" data-bs-toggle="modal" data-bs-target="#loginModal">Add to Cart</a>
+                                                                    <a class="buy-now" data-bs-toggle="modal" data-bs-target="#loginModal">Buy Now</a>
+                                                                </div>
+                                                                {% endif %}
                                                             </div>
-                                                            {% else %}
-                                                            <div class="buttons-container">
-                                                                <a class="add-to-cart" data-bs-toggle="modal" data-bs-target="#loginModal">Add to Cart</a>
-                                                                <a class="buy-now" data-bs-toggle="modal" data-bs-target="#loginModal">Buy Now</a>
-                                                            </div>
-                                                            {% endif %}
                                                         </div>
-                                                    </div>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
 
-                                        <!-- Right Column -->
-                                        <div class="col-sm-6 col-lg-6">
-                                            {% for i in food_items %}
-                                                {% if forloop.counter > half_length %}
-                                                    <div class="single_food_item media" style="align-items: center;">
-                                                        <img src="{{ i.image.url }}" class="mr-3" alt="..." >
-                                                        <div class="media-body">
-                                                            <h3>{{ i.name }}</h3>
-                                                            <p id="text-{{ forloop.counter }}">
-                                                                {{ i.description|slice:":30" }} <!-- First 30 characters -->
-                                                                <span id="dots-{{ forloop.counter }}">...</span>
-                                                                <span id="more-{{ forloop.counter }}" style="display: none;">
-                                                                    {{ i.description|slice:"30:" }} <!-- Remaining description -->
-                                                                </span>
-                                                                <a href="javascript:void(0);" class="read-more-btn" onclick="toggleReadMore({{ forloop.counter }})">Read More</a>
-                                                            </p>
-                                                            <h5>₹{{ i.price }}</h5>
-                                                            {% if request.user.is_active == 1 %}
-                                                            <div class="buttons-container">
-                                                                <a class="add-to-cart" href="{% url 'add_cart' i.id %}">Add to Cart</a>
-                                                                <a class="buy-now" href="{% url 'buynow' i.id %}">Buy Now</a>
+                                            <!-- Right Column -->
+                                            <div class="col-sm-6 col-lg-6">
+                                                {% for i in food_items %}
+                                                    {% if forloop.counter > half_length %}
+                                                        <div class="single_food_item media" style="align-items: center;">
+                                                            <img src="{{ i.image.url }}" class="mr-3" alt="..." >
+                                                            <div class="media-body">
+                                                                <h3>{{ i.name }}</h3>
+                                                                <p id="text-{{ forloop.counter }}">
+                                                                    {{ i.description|slice:":10" }} <!-- First 30 characters -->
+                                                                    <span id="dots-{{ forloop.counter }}">...</span>
+                                                                    <span id="more-{{ forloop.counter }}" style="display: none;">
+                                                                        {{ i.description|slice:"10:" }} <!-- Remaining description -->
+                                                                    </span>
+                                                                    <a href="javascript:void(0);" class="read-more-btn" onclick="toggleReadMore({{ forloop.counter }})">Read More</a>
+                                                                </p>
+                                                                <h5>₹{{ i.price }}</h5>
+                                                                {% if request.user.is_active == 1 %}
+                                                                <div class="buttons-container">
+                                                                    <a class="add-to-cart" href="{% url 'add_cart' i.id %}">Add to Cart</a>
+                                                                    <a class="buy-now" href="{% url 'buynow' i.id %}">Buy Now</a>
+                                                                </div>
+                                                                {% else %}
+                                                                <div class="buttons-container">
+                                                                    <a class="add-to-cart" data-bs-toggle="modal" data-bs-target="#loginModal">Add to Cart</a>
+                                                                    <a class="buy-now" data-bs-toggle="modal" data-bs-target="#loginModal">Buy Now</a>
+                                                                </div>
+                                                                {% endif %}
                                                             </div>
-                                                            {% else %}
-                                                            <div class="buttons-container">
-                                                                <a class="add-to-cart" data-bs-toggle="modal" data-bs-target="#loginModal">Add to Cart</a>
-                                                                <a class="buy-now" data-bs-toggle="modal" data-bs-target="#loginModal">Buy Now</a>
-                                                            </div>
-                                                            {% endif %}
                                                         </div>
-                                                    </div>
-                                                {% endif %}
-                                            {% endfor %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                {% endif %}
-
+                    {% endif %}
             </div>
         </div>
     </section>
@@ -289,7 +290,7 @@
     <!--::chefs_part start::-->
     <section class="chefs_part blog_item_section section_padding">
         <div class="container">
-            {% if chefs %}
+        {% if chefs %}
             <div class="row">
                 <div class="col-xl-5">
                     <div class="section_tittle">
@@ -313,7 +314,11 @@
                 </div>
                 {% endfor %}
             </div>
-            {% endif %}
+        {% else %}
+        <div style="text-align: center;">
+            <h2>There is no Chefs found!</h2>
+        </div>
+        {% endif %}
         </div>
     </section>
     <!--::chefs_part end::-->
@@ -351,7 +356,7 @@
                                 </div>
                                 <div class="form-group col-md-6">
                                     <div class="input-group date">
-                                        <input id="datepicker" type="text" name="date" class="form-control" placeholder="Date *" />
+                                        <input id="datepicker" type="text" name="date" class="form-control" placeholder="Date *" required/>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6">
@@ -427,4 +432,22 @@
     <!--::review_part end::-->
 
    
+{% endblock %}
+{% block script %}
+    function toggleReadMore(id) {
+      const dots = document.getElementById("dots-" + id);
+      const moreText = document.getElementById("more-" + id);
+      const btnText = document.querySelector("#text-" + id + " .read-more-btn");
+  
+      if (moreText.style.display === "none") {
+        dots.style.display = "none";
+        moreText.style.display = "inline";
+        btnText.textContent = "Read Less";
+      } else {
+        dots.style.display = "inline";
+        moreText.style.display = "none";
+        btnText.textContent = "Read More";
+      }
+    }
+  
 {% endblock %}

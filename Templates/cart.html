@@ -18,36 +18,6 @@
 .r-cart .btn:hover{
     background-color: #f17902;
 }
-/* Style for the custom checkbox */
-.cart-item .row .col-12 input[type="checkbox"] {
-    /* -webkit-appearance: none; 
-    -moz-appearance: none; */
-    appearance: none;
-    width: 20px; /* Set size of the checkbox */
-    height: 20px; /* Set size of the checkbox */
-    border: 2px solid #ccc; /* Border color for the checkbox */
-    border-radius: 4px; /* Rounded corners */
-    position: relative;
-    background-color: #fff; /* Background color when not checked */
-    cursor: pointer;
-}
-
-/* Style the checkbox when it's checked */
-.cart-item .row .col-12 input[type="checkbox"]:checked {
-    background-color: #ff7f00; /* Orange background when checked */
-    border-color: #ff7f00; /* Border color for checked state */
-}
-
-/* Add tick mark for the checked state */
-.cart-item .row .col-12 input[type="checkbox"]:checked::before {
-    content: '\2713'; /* Unicode character for checkmark */
-    font-size: 20px;
-    color: white; /* Set the tick color to white */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* Center the checkmark */
-}
 
 .cartitems-container {
     padding: 5rem 0;
@@ -84,19 +54,21 @@
                                         <img src="{{ i.item.image.url }}" alt="{{ i.item.name }}" class="img-fluid rounded" style="width: 164px;height: 164px;">
                                     </div>
                                     <div class="col-md-9">
-                                        <div class="col-12 d-flex justify-content-end" style="font-size: 20px;">
-                                            <input type="checkbox" id="#" name="" value="">
-                                        </div>
                                         <h5 class="mb-2">{{ i.item.name }}</h5>
                                         <!-- Size Dropdown -->
-                                            <label for="size"><b>Select Size:</b></label>
-                                            <select name="size" class="size-selector" data-item-id="">
-                                                {% for value, label in i.item.get_size_choices %}
-                                                    <option value="{{ value }}" {% if i.size == value %}selected{% endif %}>
-                                                        {{ label }}
-                                                    </option>
-                                                {% endfor %}
-                                            </select>
+                                        <div class="col-md-9">
+                                            <form id="sizeForm_{{ i.id }}" method="POST" action="{% url 'update_size' i.id %}">
+                                                {% csrf_token %}
+                                                <label for="size_{{ i.id }}"><b>Select Size:</b></label>
+                                                <select name="size" id="size_{{ i.id }}" class="size-selector" onchange="submitSizeForm('{{ i.id }}')">
+                                                    {% for value, label in i.item.get_size_choices %}
+                                                        <option value="{{ value }}" {% if i.size == value %}selected{% endif %}>
+                                                            {{ label }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </form>
+                                        </div>
                                         <div class="d-flex align-items-center">
                                             <div class="input-group w-auto">
                                                 <a class="btn" href="{% url 'decrement_quantity' i.id %}" style="border: 1px solid #000;">-</a>
@@ -169,28 +141,14 @@
     </section>
 {% endblock %}
 {% block script %}
-document.querySelectorAll(".size-selector").forEach((selectElement) => {
-    selectElement.addEventListener("change", function() {
-        const selectedSize = this.value;
-        const itemId = this.getAttribute("data-item-id");
 
-        if (itemId) {
-            const updateUrl = `/update_size/${itemId}/?size=${selectedSize}`;
-
-            fetch(updateUrl, { method: 'GET' })
-                .then(response => {
-                    if (response.redirected) {
-                        window.location.href = response.url;
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log(data.message);
-                })
-                .catch(error => console.error('Error:', error));
-        } else {
-            console.error('Item ID is missing!');
+    function submitSizeForm(itemId) {
+        var form = document.getElementById('sizeForm_' + itemId);
+        if (form) {
+            form.submit();
         }
-    });
-});
+    }
+
+
+
 {% endblock %}

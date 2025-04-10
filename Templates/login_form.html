@@ -38,26 +38,6 @@
                     <i class="fas fa-window-close" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></i>
                 </div>
                 <div class="modal-body">
-<!--                    <form id="signupForm" action="{% url 'signup' %}" method="post" enctype="multipart/form-data">-->
-<!--                        {% csrf_token %}-->
-<!--                        <div class="mb-3">-->
-<!--                            <label for="signupName" class="form-label">First Name</label>-->
-<!--                            <input type="text" class="form-control" id="signupName" required name="fname">-->
-<!--                        </div>-->
-<!--                        <div class="mb-3">-->
-<!--                            <label for="signupName" class="form-label">Last Name</label>-->
-<!--                            <input type="text" class="form-control" id="signupName" required name="lname">-->
-<!--                        </div>-->
-<!--                        <div class="mb-3">-->
-<!--                            <label for="signupEmail" class="form-label">Email address</label>-->
-<!--                            <input type="email" class="form-control" id="signupEmail" required name="email">-->
-<!--                        </div>-->
-<!--                        <div class="mb-3">-->
-<!--                            <label for="signupPassword" class="form-label">Password</label>-->
-<!--                            <input type="password" class="form-control" id="signupPassword" required name="password">-->
-<!--                        </div>-->
-<!--                        <button type="submit" class="btn btn-color w-100" style="background-color: #ff9200;">Signup</button>-->
-<!--                    </form>-->
                         <form id="signupForm" action="{% url 'signup' %}" method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="mb-3">
@@ -66,7 +46,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="signupName" class="form-label">Last Name</label>
-                                <input type="text" class="form-control" id="signupName" required name="lname">
+                                <input type="text" class="form-control" id="signupName" name="lname">
                             </div>
                             <div class="mb-3">
                                 <label for="signupEmail" class="form-label">Email address</label>

@@ -1,6 +1,11 @@
 {% extends "extend.html" %}
 {% load static %}
 {% block title %}Order Confirmation{% endblock %}
+{% block style %}
+.btnOrder{
+    background-color: #ff9200 !important;
+}
+{% endblock %}
 {% block content %}
 
     <section>
@@ -14,7 +19,7 @@
                     {% if order %}
                         <p>ORDER ID: {{ order.id }}</p>
                         <p>ORDER AMOUNT: {{ order.total }}</p>
-                    <a href="{% url 'user_invoice' order.id  %}" class="btn" style="color: #000 !important;">Get Invoice</a>
+                    <a href="{% url 'user_invoice' order.id  %}" class="btn btnOrder" style="color: #000 !important;">Get Invoice</a>
                     {% endif %}
                     
                 </div>

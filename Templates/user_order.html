@@ -18,9 +18,8 @@
     <!-- order history -->
      <section class="order_history" >
         <div class="container py-5">
+            {% if orders %}
             <h2 class="mb-4">Order History</h2>
-    
-    
             <div class="table-responsive">
                 <table class="table table-hover table-striped align-middle">
                     <thead>
@@ -62,6 +61,12 @@
                     </tbody>
                 </table>
             </div>
+            {% else %}
+            <div style="text-align: center;justify-content: center;">
+                <h2>No orders yet. Start shopping now!</h2>
+                <a href="{% url 'food_menu' %}" class="btn  d-sm-block" style="background-color:#ff6426 !important;width: 20%;margin: auto;color: #fff !important;">Continue Shopping</a>
+            </div>
+            {% endif %}
     
     
         </div>

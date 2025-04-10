@@ -107,7 +107,7 @@ body{margin-top:20px;}
                         {% for i in user_address %}
                         <div id="address-details" class="card mt-3">
                             <div class="card-body">
-                                <p><strong>Phone:</strong> {{ i.phone_number }}</p>
+                                <p><strong>Phone:</strong>+91 {{ i.phone_number }}</p>
                                 <p><strong>Street:</strong> {{ i.street }}</p>
                                 <p><strong>City:</strong> {{ i.city }}</p>
                                 <p><strong>District:</strong> {{ i.district }}</p>
@@ -144,6 +144,8 @@ body{margin-top:20px;}
                         <div class="container">
                           <div class="row d-flex justify-content-center align-items-center h-100">
                             <div class="col-lg-12 col-xl-12">
+                                
+                            {% if order %}
                               <div class="card" style="border-radius: 10px;">
                                 <div class="card-header px-4 py-5">
                                   <h5 class="text-muted mb-0">Thanks for your Order, <span style="color: #fa8764;">{{ user_details.first_name }} {{ user_details.last_name}}</span>!</h5>
@@ -159,16 +161,16 @@ body{margin-top:20px;}
                                       <div class="row">
                                         <div class="col-md-2">
                                           <img src="{{ i.item.image.url }}"
-                                            class="img-fluid" alt="Phone">
+                                            class="img-fluid" style="padding-right: 5px ;" alt="Phone">
                                         </div>
                                         <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                          <p class="text-muted mb-0">{{ i.item.name }}</p>
+                                          <p class="text-muted mb-0 text-nowrap">{{ i.item.name }}</p>
                                         </div>
                                         <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
                                           <p class="text-muted mb-0 small">size({{ i.size }})</p>
                                         </div>
                                         <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                          <p class="text-muted mb-0 small">₹{{ i.item.price }}</p>
+                                          <p class="text-muted mb-0 small">₹{{ i.size_oriented_price }}</p>
                                         </div>
                                         <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
                                           <p class="text-muted mb-0 small">Quantity({{ i.quantity }})</p>
@@ -188,6 +190,7 @@ body{margin-top:20px;}
                                     
                                 </div>
                               </div>
+                              {% endif %}
                             </div>
                           </div>
                         </div>
@@ -207,8 +210,15 @@ body{margin-top:20px;}
             <div class="modal-body">
                 <form method="POST" action="{% url 'save_address' %}">
                     {% csrf_token %}
-                    <label>Phone:</label>
-                    <input type="text" name="phone_number" class="form-control" required>
+            
+                    <div class="input-group">
+                        <span class="input-group-text">+91</span>
+                        <input type="text" name="phone_number" class="form-control" id="phone" 
+                               pattern="\d{10}" 
+                               title="Please enter a 10-digit phone number" 
+                               placeholder="Enter 10-digit number" 
+                               required>
+                    </div>
 
                     <label>Street:</label>
                     <input type="text" name="street" class="form-control" required>
@@ -220,7 +230,7 @@ body{margin-top:20px;}
                     <input type="text" name="district" class="form-control" required>
 
                     <label>Zip Code:</label>
-                    <input type="text" name="zipcode" class="form-control" required>
+                    <input type="text" name="zipcode" class="form-control" pattern="\d{6}" title="Please enter a 6-digit phone number" placeholder="Provide 6 digit number" required>
 
                     <label>Address Type:</label>
                      <select name="address_type" class="form-control">
@@ -235,46 +245,5 @@ body{margin-top:20px;}
     </div>
 </div>
 
-<!-- Edit Address Modal -->
-{% if user_address %}
-<div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="editAddressLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editAddressLabel">Edit Address</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="">
-                    {% csrf_token %}
-                    <input type="hidden" name="address_id" value="{{ user_address.0.id }}">
 
-                    <label>Phone:</label>
-                    <input type="text" name="phone_number" class="form-control" value="{{ user_address.0.phone_number }}" required>
-
-                    <label>Street:</label>
-                    <input type="text" name="street" class="form-control" value="{{ user_address.0.street }}" required>
-
-                    <label>City:</label>
-                    <input type="text" name="city" class="form-control" value="{{ user_address.0.city }}" required>
-
-                    <label>District:</label>
-                    <input type="text" name="district" class="form-control" value="{{ user_address.0.district }}" required>
-
-                    <label>Zip Code:</label>
-                    <input type="text" name="zipcode" class="form-control" value="{{ user_address.0.zipcode }}" required>
-
-                    <label>Address Type:</label>
-                    <select name="address_type" class="form-control">
-                        <option value="1" >Permanent</option>
-                        <option value="2" >Temporary</option>
-                    </select>
-
-                    <button type="submit" class="btn btn-warning mt-3">Update Address</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
 {% endblock %}

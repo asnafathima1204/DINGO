@@ -24,10 +24,10 @@
                 <div class="row g-0">
                   <div class="col-md-4">
                     {% if chef.image %}
-    <img src="{{ chef.image.url }}" alt="{{ chef.name }}">
-{% else %}
-    <p>No image available</p>
-{% endif %}
+                        <img src="{{ chef.image.url }}" alt="{{ chef.name }}" style="width: 350px;" name="viewChef">
+                    {% else %}
+                        <p>No image available</p>
+                    {% endif %}
                   </div>
                   <div class="col-md-8">
                     <div class="card-body">
@@ -35,7 +35,9 @@
                       <p><strong>ID: </strong>{{ chef.chef_id }}</p>
                       <p><strong>Specialty: </strong>{{ chef.specialty }}</p>
                       <p><strong>Experience: </strong>{{ chef.experience }} year</p>
-                      <p class="card-text"><strong>Bio: </strong>{{ chef.bio}}</p>
+                      {% if chef.bio %}
+                       <p class="card-text"><strong>Bio: </strong>{{ chef.bio}}</p>
+                      {% endif %}
                     </div>
                   </div>
                 </div>

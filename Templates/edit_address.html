@@ -4,11 +4,19 @@
 {% block content %}
     <div class="container" style="padding: 10rem;">
 
-        <form class="row g-3 needs-validation" method="post" action="{% url 'update_address' address.id %}" novalidate>
+        <form class="row g-3 needs-validation" method="post" action="{% url 'update_address' address.id %}" >
             {% csrf_token %}
             <div class="col-md-6">
-                <label for="phone" class="form-label">Phone:</label>
-                <input type="text" name="phone_number" class="form-control" id="phone" value="{{ address.phone_number }}" required>
+                
+                <label for="street" class="form-label">Phone:</label><br>
+                <div class="input-group">
+                    <span class="input-group-text">+91</span>
+                    <input type="text" name="phone_number" class="form-control" id="phone" 
+                        pattern="\d{10}" 
+                        title="Please enter a 10-digit phone number" 
+                        placeholder="Enter 10-digit number" 
+                        required>
+                </div>
             </div>
             <div class="col-md-6">
                 <label for="street" class="form-label">Street:</label>
@@ -24,7 +32,7 @@
             </div>
             <div class="col-md-6">
                 <label for="zipcode" class="form-label">Zip Code:</label>
-                <input type="text" name="zipcode" class="form-control" id="zipcode" value="{{ address.zipcode  }}" required>
+                <input type="text" name="zipcode" class="form-control" id="zipcode" value="{{ address.zipcode  }}" pattern="\d{6}" title="Please enter a 6-digit phone number" placeholder="Provide 6 digit number" required>
             </div>
             <div class="col-md-6">
                 <label>Address Type:</label>

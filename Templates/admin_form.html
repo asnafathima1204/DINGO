@@ -17,15 +17,16 @@
                 <div class="col-lg-6">
                     <div class="form-group ">
                         <label for="item_id">Item id:</label>
-                        <input type="text" class="form-control" id="itemId" name="item_id">
+                        <input type="text" class="form-control" id="itemId" name="item_id" required>
                     </div>
                     <div class="form-group">
                         <label for="category">Catogery:</label>
-                        <input type="text" class="form-control" id="category" name="category">
+                        <input type="text" class="form-control" id="category" name="category" required>
                     </div>
                     <div class="form-group">
                         <label for="price">Price:</label>
-                        <input type="number" class="form-control" id="price" name="price">
+                        <input type="number" class="form-control" step="0.01"  id="price" name="price" required>
+
                     </div>
                     <div class="form-group">
                         <label for="description">Description:</label>
@@ -36,7 +37,7 @@
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label for="name">Name:</label>
-                    <input type="text" class="form-control" id="name" name="name">
+                    <input type="text" class="form-control" id="name" name="name" required>
                   </div>
                   <div class="form-group">
                      <label>Category Type:</label>
@@ -56,7 +57,7 @@
 
                   <div class="form-group">
                     <label for="image">Image:</label>
-                    <input type="file" class="form-control-file" id="image" name="image">
+                    <input type="file" class="form-control-file" id="image" name="image" required>
                 </div>  
                 </div>
               </div>
@@ -128,9 +129,18 @@
                     </select>
                 </div>
                 <div class="form-group">
-                  <label for="image">Image:</label>
+                  <label for="image">Current Image:</label>
+                  <!-- Display the existing image -->
+                  {% if i.image %}
+                      <img src="{{ i.image.url }}" alt="Item Image" style="width: 150px; height: 150px; margin-bottom: 10px;">
+                  {% else %}
+                      <p>No image available</p>
+                  {% endif %}
+          
+                  <!-- Upload new image -->
+                  <label for="image">Upload New Image:</label>
                   <input type="file" class="form-control-file" id="image" name="image">
-              </div>  
+                </div> 
               </div>
             </div>
            
@@ -165,11 +175,11 @@
               <div class="col-lg-6">
                   <div class="form-group">
                       <label for="chef_id">Chef's ID:</label>
-                      <input type="text" class="form-control" id="chef_id" name="chef_id">
+                      <input type="text" class="form-control" id="chef_id" name="chef_id" required>
                   </div>
                   <div class="form-group">
                       <label for="experience">Experience:</label>
-                      <input type="number" class="form-control" id="experience" name="experience">
+                      <input type="number" class="form-control" id="experience" name="experience" required>
                   </div>
                   <div class="form-group">
                     <label for="bio">Bio:</label>
@@ -179,15 +189,15 @@
               <div class="col-lg-6">
                   <div class="form-group ">
                       <label for="name">Name:</label>
-                      <input type="text" class="form-control" id="name" name="name">
+                      <input type="text" class="form-control" id="name" name="name" required>
                   </div>
                   <div class="form-group">
                       <label for="specialty">Specialty:</label>
-                      <input type="text" class="form-control" id="specialty" name="specialty">
+                      <input type="text" class="form-control" id="specialty" name="specialty" required>
                   </div>
                   <div class="form-group">
                     <label for="image">Image:</label>
-                    <input type="file" class="form-control-file" id="image" name="image">
+                    <input type="file" class="form-control-file" id="image" name="image" required>
                   </div> 
               </div>
             </div>
@@ -244,8 +254,17 @@
                       <input type="text" class="form-control" id="specialty" name="specialty" value="{{ chef.specialty }}">
                   </div>
                   <div class="form-group">
-                    <label for="image">Image:</label>
-                    <input type="file" class="form-control-file" id="image" name="image" value="{{ chefs.image}}">
+                    <label for="image">Current Image:</label>
+                    <!-- Display the existing image -->
+                    {% if chef.image %}
+                        <img src="{{ chef.image.url }}" alt="Chef Image" style="width: 150px; height: 150px; margin-bottom: 10px;">
+                    {% else %}
+                        <p>No image available</p>
+                    {% endif %}
+            
+                    <!-- Upload new image -->
+                    <label for="image">Upload New Image:</label>
+                    <input type="file" class="form-control-file" id="image" name="image">
                   </div> 
               </div>
             </div>

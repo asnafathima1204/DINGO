@@ -60,3 +60,5 @@ urlpatterns = [
     path('admin_reservation/',views.admin_reservation, name='admin_reservation'),
     path('admin_contact/',views.admin_contact, name='admin_contact'),
 ]
+handler404 = 'DINGO_APP.views.not_found'
+

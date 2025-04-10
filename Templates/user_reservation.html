@@ -6,9 +6,9 @@
     <!-- Reservation history -->
     <section class="order_history" >
         <div class="container py-5">
+            
+            {% if reservation %}
             <h2 class="mb-4">Reservation History</h2>
-    
-    
             <div class="table-responsive">
                 <table class="table table-hover table-striped align-middle">
                     <thead>
@@ -47,6 +47,15 @@
                     </tbody>
                 </table>
             </div>
+            {% else %}
+            <div style="text-align: center;justify-content: center;">
+                <h2>Oops!,No reservation found.</h2>
+                <h2>It looks like you don't have a reservation yet.</h2>
+                <div class="menu_btn" style="width: 20%;margin: auto;">
+                    <a href="{% url 'user_home' %}#reservation" class="btn_1 d-none d-sm-block" style="border: 2px solid #ff6426 !important;">book a tabel</a>
+                </div>
+            </div>
+            {% endif %}
     
     
         </div>

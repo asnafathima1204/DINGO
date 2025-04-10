@@ -32,7 +32,9 @@
                       <p><strong>Price:</strong>{{ i.price }}</p>
                       <p><strong>Category:</strong>{{ i.category }}</p>
                       <p></p>
+                      {% if i.description %}
                       <p class="card-text"><strong>Description:</strong>{{ i.description}}</p>
+                      {% endif %}
                       {% if i.exclusive_item %}
                       <span class="badge bg-warning text-dark">Exclusive</span>
                       {% endif %}
