@@ -22,14 +22,14 @@
               
               <div class="card mb-3">
                 <div class="row g-0">
-                  <div class="col-md-4">
+                  <div class="col-lg-4 col-sm-12" >
                     {% if chef.image %}
-                        <img src="{{ chef.image.url }}" alt="{{ chef.name }}" style="width: 350px;" name="viewChef">
+                        <img src="{{ chef.image.url }}" alt="{{ chef.name }}" style="width:100%;height: 100%;" name="viewChef">
                     {% else %}
                         <p>No image available</p>
                     {% endif %}
                   </div>
-                  <div class="col-md-8">
+                  <div class="col-md-8 col-sm-12">
                     <div class="card-body">
                       <h5 class="card-title">Chef {{ chef.name }}</h5>
                       <p><strong>ID: </strong>{{ chef.chef_id }}</p>

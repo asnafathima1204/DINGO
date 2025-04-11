@@ -18,6 +18,9 @@
   <!-- font awesome cdn -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
+    body{
+      /* overflow: hidden; */
+    }
     .alert-warning {
       z-index: 9999;
       color: #856404;
@@ -54,13 +57,41 @@
       position: relative;
       width: 100%;
     }
+    @media (max-width: 576px) {
+      .left_dashboard{
+        position: relative !important;
+      }
+      .right_dashboard{
+        margin-left: 0px !important;
+      }
+    }
+    @media (max-width: 768px){
+      .right_dashboard{
+        margin-left: 16rem;
+      }
+    }
+    @media (min-width: 768px){
+      .right_dashboard{
+        margin-left: 17rem !important;
+      }
+    }
+    @media (min-width: 1000px){
+      .right_dashboard{
+        margin-left: 16rem !important;
+      }
+    }
+    @media (min-width: 1200px){
+      .right_dashboard{
+        margin-left: 19rem !important;
+      }
+    }
     @media (min-width: 1200px) {
     #main-wrapper[data-layout=vertical][data-sidebartype=full] .body-wrapper {
         margin-left: 0px;
         }
     }
     @media (max-width: 1199px) {
-    #main-wrapper[data-layout=vertical][data-sidebartype=full] .left-sidebar, #main-wrapper[data-layout=vertical][data-sidebartype=mini-sidebar]
+      #main-wrapper[data-layout=vertical][data-sidebartype=full] .left-sidebar, #main-wrapper[data-layout=vertical][data-sidebartype=mini-sidebar]
      .left-sidebar {
          left: 0px;
         }
@@ -70,6 +101,13 @@
         padding: 0 24px;
         height: auto;
         border-radius: 7px;
+    }
+    .page-wrapper {
+        position: relative;
+        overflow: hidden;
+    }
+    .left_dashboard{
+      position: fixed;
     }
   {% block style %}
   {% endblock%}
@@ -92,7 +130,7 @@
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
     <div class="row">
-      <div class="col-lg-3 col-md-4 col-sm-6">
+      <div class="col-lg-3 col-md-4 col-sm-5 left_dashboard">
         <!-- Sidebar Start -->
         <aside class="left-sidebar">
           <!-- Sidebar scroll-->
@@ -180,7 +218,7 @@
           <!-- End Sidebar scroll-->
         </aside>
       </div>
-      <div class="col-lg-9 col-md-8 col-sm-6">
+      <div class="col-lg-9 col-md-8 col-sm-7 right_dashboard">
         <div class="body-wrapper">
           {% block content %}
           {% endblock %}
