@@ -24,8 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-fgecod*gaf#8nfbhu4oxh64y@mx1y3_)jwg8(yt7cyz%z1w7%9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+DEBUG = False
+ALLOWED_HOSTS = ['127.0.0.1', 'dingo-n29j.onrender.com']
 
 
 
@@ -56,10 +56,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'DINGO_PRO.urls'
 
+import os
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "templates"],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
