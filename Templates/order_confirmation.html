@@ -1,0 +1,29 @@
+{% extends "extend.html" %}
+{% load static %}
+{% block title %}Order Confirmation{% endblock %}
+{% block style %}
+.btnOrder{
+    background-color: #ff9200 !important;
+}
+{% endblock %}
+{% block content %}
+
+    <section>
+        <div class="order_confirmation r-cart" style="padding: 30vh 0;">
+            <div class="container border text-center p-4" style="width: 50%;">
+                <div class="icon">
+                    <img src="/static/img/order_confirmation_icon.png" alt="" style="width: 100px;">
+                </div>
+                <div class="content">
+                    <h1>Order Placed Successfully!</h1>
+                    {% if order %}
+                        <p>ORDER ID: {{ order.id }}</p>
+                        <p>ORDER AMOUNT: {{ order.total }}</p>
+                    <a href="{% url 'user_invoice' order.id  %}" class="btn btnOrder" style="color: #000 !important;">Get Invoice</a>
+                    {% endif %}
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

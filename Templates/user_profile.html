@@ -1,0 +1,249 @@
+{% extends "extend.html" %}
+{% load static %}
+{% block title %}Profile{% endblock %}
+{% block style %}
+.img-account-profile {
+    height: 10rem;
+}
+.rounded-circle {
+    border-radius: 50% !important;
+}
+.card{
+    box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%);
+    padding: 10px;
+}
+.card .card-header {
+    font-weight: 500;
+}
+.card-header:first-child {
+    border-radius: 0.35rem 0.35rem 0 0;
+}
+.card-header {
+    padding: 1rem 1.35rem;
+    margin-bottom: 0;
+    background-color: rgba(33, 40, 50, 0.03);
+    border-bottom: 1px solid rgba(33, 40, 50, 0.125);
+}
+.form-control, .dataTable-input {
+    display: block;
+    width: 100%;
+    padding: 0.875rem 1.125rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1;
+    color: #69707a;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #c5ccd6;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0.35rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.nav-borders .nav-link.active {
+    color: #0061f2;
+    border-bottom-color: #0061f2;
+}
+.nav-borders .nav-link {
+    color: #69707a;
+    border-bottom-width: 0.125rem;
+    border-bottom-style: solid;
+    border-bottom-color: transparent;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.details{
+    padding: 10rem 0;
+}
+
+body{margin-top:20px;}
+
+.profile_btn{
+    margin: auto;
+    align-content: center;
+    text-align: right;
+}
+
+.profile_btn a{
+    background-color: #ff9200;
+    color: #000;
+}
+
+.profile_btn a:hover{
+    border: 1px solid #ff9200;
+}
+.fade {
+    transition: opacity .15slinear;
+}
+
+.delete-link:hover{
+    color: #000 !important;
+    opacity: 0.7 !important;
+}
+{% endblock %}
+{% block content %}
+  
+            <div class="container-xl px-4 mt-4">
+            <div class="row">
+                <div class="col-xl-4">
+                    <!-- Profile picture card -->
+                    <div class="card mb-4 mb-xl-0">
+                        <div class="card-header">Profile</div>
+                        <div class="card-body text-center">
+                            <img class="img-account-profile rounded-circle mb-2" src="/static/img/profile.png" alt="">
+                            <p>{{ user_details.first_name }} {{ user_details.last_name }}</p>
+                            <p>{{ user_details.email }}</p>
+                        </div>
+
+
+                        {% if user_address %}
+                        {% for i in user_address %}
+                        <div id="address-details" class="card mt-3">
+                            <div class="card-body">
+                                <p><strong>Phone:</strong>+91 {{ i.phone_number }}</p>
+                                <p><strong>Street:</strong> {{ i.street }}</p>
+                                <p><strong>City:</strong> {{ i.city }}</p>
+                                <p><strong>District:</strong> {{ i.district }}</p>
+                                <p><strong>Zip Code:</strong> {{ i.zipcode }}</p>
+                            </div>
+
+                            <div class="row d-flex">
+                                <div class="col-lg-6">
+                                    <a class="btn mt-2" style="background-color: #ff9200;width: 100%;color: #000 !important;" href="{% url 'edit_address' i.id %}">Edit</a>
+                                    <!-- <button id="editAddressBtn"  data-bs-toggle="modal" data-bs-target="#editAddressModal">Edit </button> -->
+                                </div>
+                                <div class="col-lg-6">
+                                    <form method="POST" action="{% url 'delete_address' i.id %}" onsubmit="return confirm('Do you really want to delete this?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn mt-2 delete-link" style="background-color: #ff9200;width: 100%;">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                           
+                        </div>
+                        {% endfor %}
+                        <!-- Edit Address Button -->
+                        <button id="moreAddressBtn" class="btn mt-2" style="background-color: #ff9200;" data-bs-toggle="modal" data-bs-target="#addAddressModal">Add More Address</button>
+                    {% else %}
+                        <!-- Add Address Button -->
+                        <button id="addAddressBtn" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#addAddressModal">Add Address</button>
+                    {% endif %}
+
+
+                    </div>
+                </div>
+                <div class="col-xl-8">
+                    <section class=" gradient-custom">
+                        <div class="container">
+                          <div class="row d-flex justify-content-center align-items-center h-100">
+                            <div class="col-lg-12 col-xl-12">
+                                
+                            {% if order %}
+                              <div class="card" style="border-radius: 10px;">
+                                <div class="card-header px-4 py-5">
+                                  <h5 class="text-muted mb-0">Thanks for your Order, <span style="color: #fa8764;">{{ user_details.first_name }} {{ user_details.last_name}}</span>!</h5>
+                                </div>
+                                <div class="card-body p-4">
+                                  <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <p class="lead fw-normal mb-0" style="color: #fa8764;">Order Details</p>
+                                    <p class="small text-muted mb-0">Order id : ##ORD{{order.id}}</p>
+                                  </div>
+                                  {% for i in order_item %}
+                                  <div class="card shadow-0 border mb-4">
+                                    <div class="card-body">
+                                      <div class="row">
+                                        <div class="col-md-2">
+                                          <img src="{{ i.item.image.url }}"
+                                            class="img-fluid" style="padding-right: 5px ;" alt="Phone">
+                                        </div>
+                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                          <p class="text-muted mb-0 text-nowrap">{{ i.item.name }}</p>
+                                        </div>
+                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                          <p class="text-muted mb-0 small">size({{ i.size }})</p>
+                                        </div>
+                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                          <p class="text-muted mb-0 small">₹{{ i.size_oriented_price }}</p>
+                                        </div>
+                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                          <p class="text-muted mb-0 small">Quantity({{ i.quantity }})</p>
+                                        </div>
+                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                          <p class="text-muted mb-0 small">subtotal ₹{{ i.price_per_items }}</p>
+                                        </div>
+                                      </div>
+                                      <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">
+                                    </div>
+                                  </div>
+                                  {% endfor %}
+                                  
+                                  <div class="profile_btn">
+                                    <a href="{% url 'user_order' %}" class="btn" style="color: #000;" >Back to Order</a>
+                                  </div>
+                                    
+                                </div>
+                              </div>
+                              {% endif %}
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                </div>
+        
+
+
+<!-- Add Address Modal -->
+<div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addAddressLabel">Add Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'save_address' %}">
+                    {% csrf_token %}
+            
+                    <div class="input-group">
+                        <span class="input-group-text">+91</span>
+                        <input type="text" name="phone_number" class="form-control" id="phone" 
+                               pattern="\d{10}" 
+                               title="Please enter a 10-digit phone number" 
+                               placeholder="Enter 10-digit number" 
+                               required>
+                    </div>
+
+                    <label>Street:</label>
+                    <input type="text" name="street" class="form-control" required>
+
+                    <label>City:</label>
+                    <input type="text" name="city" class="form-control" required>
+
+                    <label>District:</label>
+                    <input type="text" name="district" class="form-control" required>
+
+                    <label>Zip Code:</label>
+                    <input type="text" name="zipcode" class="form-control" pattern="\d{6}" title="Please enter a 6-digit phone number" placeholder="Provide 6 digit number" required>
+
+                    <label>Address Type:</label>
+                     <select name="address_type" class="form-control">
+                        <option value="1" >Permanent</option>
+                        <option value="2" >Temporary</option>
+                    </select>
+
+                    <button type="submit" class="btn btn-success mt-3">Save Address</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

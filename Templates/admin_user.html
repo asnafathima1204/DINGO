@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}User Details{% endblock %}
+{% block content %}
+      <div class="container-fluid">
+        <div class="container-fluid">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title fw-semibold mb-4">User details</h5>
+              <div class="card mb-0">
+                {% if users %}
+                <div class="card-body p-4">
+                  <div class="table-responsive">
+                      <table class="table table-hover table-bordered">
+                          <thead>
+                              <tr>
+                                  <th scope="col">S/N</th>
+                                  <th scope="col" class="text-nowrap">Full Name</th>
+                                  <th scope="col" class="text-nowrap"><i class="fa-solid fa-at"></i> Email</th>
+                                  <th scope="col"  class="text-nowrap"><i class="fa-solid fa-calendar"></i> Joined date</th>
+                                  <th scope="col" class="text-nowrap"><i class="fa-solid fa-circle-user"></i> Role</th>
+                                  <th scope="col" class="text-nowrap"><i class="fa-solid fa-circle-notch"></i> Status</th>
+                                  <th scope="col" class="text-nowrap"> </th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {% for user in users %}
+                              <tr>
+                                  <th scope="row">{{ forloop.counter }}</th>
+                                  <td class="text-nowrap">{% if user.first_name %} {{ user.first_name }} {{ user.last_name }} {% else %} N/A {% endif %}</td>
+                                  <td class="text-nowrap">{% if user.email %}{{ user.email }}{% else %} N/A {% endif %}</td>
+                                  <td>{{ user.date_joined|date:"d-m-Y"}}</td>
+                                  <td>{% if user.is_staff %}
+                                     admin
+                                    {% else %} 
+                                    user 
+                                    {% endif %}</td>
+                                  <!-- Display status -->  
+                                  <td>
+                                    {% if user.is_active %}
+                                        <span class="badge bg-success">Active</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Inactive</span>
+                                    {% endif %}
+                                  </td>
+
+                                  <!-- Disable button for admin -->
+                                  <td>
+                                      {% if user.is_superuser %}
+                                          <button class="btn btn-secondary btn-sm" disabled>Deactivate</button>
+                                      {% else %}
+                                          <a href="{% url 'toggle_user_status' user.id %}" 
+                                            class="btn btn-sm {% if user.is_active %}btn-danger{% else %}btn-success{% endif %}">
+                                              {% if user.is_active %}Deactivate{% else %}Activate{% endif %}
+                                          </a>
+                                      {% endif %}
+                                  </td>
+                              </tr>
+                              {% endfor %}
+                              
+                          </tbody>
+                      </table>
+                  </div>
+                </div>
+                {% else %}
+                <div style="text-align: center;">
+                  <h2>There is no user registered yet!</h2>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}

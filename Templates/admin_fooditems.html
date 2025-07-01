@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Food Items{% endblock %}
+{% block content %}
+      {% include 'admin_form.html' %}
+
+      <div class="container-fluid">
+        <div class="container-fluid">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title fw-semibold mb-4"><u>Food Items</u></h5>
+              <div class="py-4">
+                <div class="py-4">
+                  <!-- Button trigger modal -->
+                  <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal" style="float: right;background:#fd7e14;color:#fff;">
+                    Add Items  <i class="fa-solid fa-plus"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card mb-0">
+                {% if food_items %}
+                <div class="card-body p-4">
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                      <thead>
+                        <tr>
+                          <th scope="col">S/N</th>
+                          <th scope="col" class="text-nowrap">Item id</th>
+                          <th scope="col">Name</th>
+                          <th scope="col">Category</th>
+                          <th scope="col" class="text-nowrap">Category Type</th>
+                          <th scope="col">Price</th>
+                          <th>Exclusive item</th>
+                          <th scope="col"></th>
+                        </tr>
+                      </thead>
+                      {% for i in food_items %}
+                      <tbody>
+                        <tr>
+                          <th scope="row">{{ i.id }}</th>
+                          <td>{{ i.item_id }}</td>
+                          <td class="text-nowrap">
+                            <img src="{{ i.image.url }}" alt="" style="width: 50px;height: 50px;">
+                            <span style="padding: 20px;">{{ i.name }}</span>
+                          </td>
+                          <td>{{ i.category }}</td>
+                          <!-- <td>{{ i.category_type }}</td> -->
+                          <td>{{ i.get_category_type_display }}</td>
+                          <td>{{ i.price }}</td>
+                          <td>{{ i.exclusive_item }}</td>
+                          <td>
+                            <button type="button" class="btn" style="float: right;background:#fd7e14;color:#fff;">
+                              <a href="{% url 'admin_viewitems' i.id %}" style="text-decoration: none;color: #fff;">
+                                View
+                              </a>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                      {% endfor %}
+                    </table>
+                  </div>
+                </div>
+                {% else %}
+                <div style="text-align: center;">
+                  <p>Looks like you haven’t added any items yet. </p>
+                </div>
+                {% endif %}
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}

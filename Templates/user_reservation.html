@@ -1,0 +1,65 @@
+{% extends "extend.html" %}
+{% load static %}
+{% block title %}Reresvation{% endblock %}
+{% block content %}
+
+    <!-- Reservation history -->
+    <section class="order_history" >
+        <div class="container py-5">
+            
+            {% if reservation %}
+            <h2 class="mb-4">Reservation History</h2>
+            <div class="table-responsive">
+                <table class="table table-hover table-striped align-middle">
+                    <thead>
+                        <tr>
+                            <tr>
+                                <th>Reservation ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Guest</th>
+                                <th>Phone</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Note</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in reservation %}
+                        <tr>
+                            <td>##RID{{ i.id }}</td>
+                            <td>{{ i.name }}</td>
+                            <td>{{ i.email }}</td>
+                            <td>{{ i.guest }}</td>
+                            <td>{{ i.phone }}</td>
+                            <td>{{ i.date }}</td>
+                            <td>{{ i.time }}</td>
+                            <td>{{ i.note }}</td>
+                            <td>{{ i.status }}</td>
+                            {% if i.status == 'pending' %}
+                            <td><a href="{% url 'cancel_reservation' i.id %}" class="btn btn-danger">Cancel</a></td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div style="text-align: center;justify-content: center;">
+                <h2>Oops!,No reservation found.</h2>
+                <h2>It looks like you don't have a reservation yet.</h2>
+                <div class="menu_btn" style="width: 20%;margin: auto;">
+                    <a href="{% url 'user_home' %}#reservation" class="btn_1 d-none d-sm-block" style="border: 2px solid #ff6426 !important;">book a tabel</a>
+                </div>
+            </div>
+            {% endif %}
+    
+    
+        </div>
+    
+     </section>
+
+{% endblock %}

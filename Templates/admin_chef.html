@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Chef{% endblock %}
+{% block content %}
+
+      {% include 'admin_form.html' %}
+
+      <div class="container-fluid">
+        <div class="container-fluid">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title fw-semibold mb-4"><u>Chef's team</u></h5>
+              <div class="py-4">
+                <div class="py-4">
+                  <!-- Button trigger modal -->
+                  <button type="button" class="btn" data-toggle="modal" data-target="#chefForm" style="float: right;background:#fd7e14;color:#fff;">
+                    Add chef  <i class="fa-solid fa-plus"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card mb-0">
+                {% if chefs %}
+                <div class="card-body p-4">
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                      <thead>
+                        <tr>
+                          <th scope="col">S/N</th>
+                          <th scope="col" class="text-nowrap">Chef's id</th>
+                          <th scope="col">Name</th>
+                          <th scope="col">specialty</th>
+                        </tr>
+                      </thead>
+                      {% for chef in chefs %}
+                      <tbody>
+                        <tr>
+                          <th scope="row">{{ forloop.counter }}</th>
+                          <td>{{ chef.chef_id }}</td>
+                          <td>Chef {{ chef.name }}</td>
+                          <td>{{ chef.specialty }}</td>
+                          <td>
+                            <button type="button" class="btn" style="float: right;background:#fd7e14;color:#fff;">
+                                <a href="{% url 'admin_viewchef' chef.id %}" style="text-decoration: none;color: #fff;">
+                                  View
+                                </a>
+                              </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                      {% endfor %}
+                    </table>
+                  </div>
+                </div>
+                {% else %}
+                <div style="text-align: center;">
+                  <p>Looks like you haven’t added any Chef yet. </p>
+                </div>
+                {% endif %}
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+{% endblock %}

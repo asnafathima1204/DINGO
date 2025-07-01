@@ -1,0 +1,79 @@
+{% extends "extend.html" %}
+{% load static %}
+{% block title %}Exclusive Item{% endblock %}
+{% block style %}
+.fade {
+    transition: opacity .15slinear;
+}
+
+.view-section{
+    font-size: 1rem;
+}
+{% endblock %}
+{% block content %}
+
+
+    {% include 'login_form.html' %}
+
+
+    <!--exclusive view_section start -->
+    <div class="container view-section" style="padding: 20vh 0;">
+        <div class="container">
+              <div class="d-flex">
+                {% if user.is_active == 1 %}
+                <h3><span><a href="{% url 'user_home' %}">Back/</a></span>Food Items</h3>
+                {% else %}
+                <h3><span><a href="{% url 'index' %}">Back/</a></span>Food Items</h3>
+                {% endif %}
+              </div>
+              <!-- <div class="card ">
+                <div class="card-body p-4">
+                  <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal" style="float: right;background:#fd7e14;color:#fff;">
+                    Add Items
+                  </button>
+                </div>
+              </div> -->
+              
+              <div class="card mb-3">
+                <div class="row g-0">
+                  <div class="col-md-4">
+                    <img src="{{ exclusive_item.image.url }}" class="card-img-top" alt="..." style="height: 300px;" >
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ exclusive_item.name }}</h5>
+                      <p><strong>Price:</strong>{{ exclusive_item.price }}</p>
+                      <p><strong>Category:</strong>{{ exclusive_item.category }}</p>
+                      <p></p>
+                      <p class="card-text"><strong>Description:</strong>{{ exclusive_item.description}}</p>
+                      {% if exclusive_item %}
+                      <span class="badge bg-warning text-dark">Exclusive</span>
+                      {% endif %}
+                      
+                    </div>
+                    <div class="" style="float: right;">
+                        <div class="container">
+                            {% if request.user.is_active == 1 %}
+                            <div class="buttons-container">
+                                <a class="add-to-cart" href="{% url 'add_cart' exclusive_item.id %}">Add to Cart</a>
+                                <a class="buy-now" href="{% url 'buynow' exclusive_item.id %}">Buy Now</a>
+                            </div>
+                        
+                            {% else %}
+                                <div class="buttons-container">
+                                    <a class="add-to-cart" data-bs-toggle="modal" data-bs-target="#loginModal">Add to Cart</a>
+                                    <a class="buy-now" data-bs-toggle="modal" data-bs-target="#loginModal">Buy Now</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              
+        </div>
+      </div>
+    </div>
+    <!-- view_section end -->
+{% endblock %}

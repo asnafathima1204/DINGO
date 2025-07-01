@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Reresvation{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title fw-semibold mb-4">Reservation details</h5>
+          <div class="card mb-0">
+            {% if reservation %}
+            <div class="card-body p-4">
+              <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">S/N</th>
+                      <th scope="col"  class="text-nowrap">Reservation ID</th>
+                      <th scope="col"  class="text-nowrap">Status</th>
+                      <th scope="col"  class="text-nowrap">Customer Name</th>
+                      <th scope="col">email</th>
+                      <th scope="col">guest</th>
+                      <th scope="col">phone</th>
+                      <th scope="col">date</th>
+                      <th scope="col">time</th>
+                      <th scope="col">note</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for i in reservation %}
+                    <tr class="orderDetailTableRow">
+                      <th scope="row">{{ forloop.counter }}</th>
+                      <td >##RID{{ i.id }}</td>
+                      <!-- Status column -->
+                      <td class="d-flex align-items-center">
+                        {% if request.GET.edit_id == i.id|slugify %}
+                        <!-- Form appears when you click the icon -->
+                        <form method="POST" action="{% url 'admin_reservation' %}" class="d-flex">
+                            {% csrf_token %}
+                            <input type="hidden" name="reservation_id" value="{{ i.id }}">
+                            <select name="status" class="form-control form-control-sm me-2">
+                                <option value="pending" {% if i.status == "pending" %}selected{% endif %}>Pending</option>
+                                <option value="confirmed" {% if i.status == "confirmed" %}selected{% endif %}>Confirmed</option>
+                                <option value="cancelled" {% if i.status == "cancelled" %}selected{% endif %}>Cancelled</option>
+                            </select>
+                            <button type="submit" class="btn btn-success btn-sm">Save</button>
+                            <a href="{% url 'admin_reservation' %}" class="btn btn-secondary btn-sm ms-1">Cancel</a>
+                        </form>
+                        {% else %}
+                        <!-- Display status with pencil icon -->
+                          <span>{{ i.status }}</span>
+                          {% if i.status == 'pending' %}
+                          <a class="btn btn-sm ms-2 btnOrder" href="?edit_id={{ i.id|slugify }}">
+                              <i class="ti ti-pencil"></i>
+                          </a>
+                          {% endif%}
+                        {% endif %}
+                      </td>
+                      <td class="text-nowrap">{{ i.name }}</td>
+                      <td class="text-nowrap">{{ i.email }}</td>
+                      <td class="text-nowrap">{{ i.guest }}</td>
+                      <td class="text-nowrap">{{ i.phone }}</td>
+                      <td class="text-nowrap">{{ i.date }}</td>
+                      <td class="text-nowrap">{{ i.time }}</td>
+                      <td class="text-nowrap">{{ i.note }}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            {% else %}
+            <div style="text-align: center;">
+              <h2>There is no Reservations yet!!</h2>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}

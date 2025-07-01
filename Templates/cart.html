@@ -1,0 +1,154 @@
+
+{% extends "extend.html" %}
+{% load static %}
+{% load cart_filters %}
+{% block title %}Cart{% endblock %}
+{% block style %}
+.btn-color{
+    background-color: #ff9200;
+}
+
+#cart{
+    padding: 5rem 0;
+}
+
+.r-cart .btn{
+    background-color: #ff9200;
+}
+.r-cart .btn:hover{
+    background-color: #f17902;
+}
+
+.cartitems-container {
+    padding: 5rem 0;
+    background-color: #ddd;
+}
+{% endblock %}
+{% block content %}
+
+    <section id="cart">
+        <div class="container py-5">
+            {% if cart_items %}
+            <h2 class="mb-4">Shopping Cart</h2>
+            <div class="row">
+    
+                <div class="col-lg-8 order-lg-1">
+                     <div class="card shadow-sm">
+                        <div class="card-body">
+
+
+                            {% for i in cart_items %}
+                            <div class="cart-item mb-4 p-3">
+                                <div class="row align-items-center" style="border: 1px solid #777;">
+                                    <div class="col-12 d-flex justify-content-end" style="padding-right: 0px;">
+                                        <form method="post" action="{% url 'remove_cart' i.id %}" onsubmit="return confirm('Do you really want to remove this?');">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm" style="border: 1px solid #777;border-radius: 0px;background-color: #ff860d;color: #fff !important;" ><i class="fa-solid fa-xmark"></i></button>
+                                        </form>
+                                        <!-- <a href=""  class="btn mt-1 delete-link btn-danger">
+                                            
+                                        </a> -->
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <img src="{{ i.item.image.url }}" alt="{{ i.item.name }}" class="img-fluid rounded" style="width: 164px;height: 164px;">
+                                    </div>
+                                    <div class="col-md-9">
+                                        <h5 class="mb-2">{{ i.item.name }}</h5>
+                                        <!-- Size Dropdown -->
+                                        <div class="col-md-9">
+                                            <form id="sizeForm_{{ i.id }}" method="POST" action="{% url 'update_size' i.id %}">
+                                                {% csrf_token %}
+                                                <label for="size_{{ i.id }}"><b>Select Size:</b></label>
+                                                <select name="size" id="size_{{ i.id }}" class="size-selector" onchange="submitSizeForm('{{ i.id }}')">
+                                                    {% for value, label in i.item.get_size_choices %}
+                                                        <option value="{{ value }}" {% if i.size == value %}selected{% endif %}>
+                                                            {{ label }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </form>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <div class="input-group w-auto">
+                                                <a class="btn" href="{% url 'decrement_quantity' i.id %}" style="border: 1px solid #000;">-</a>
+                                                <input type="text" class="form-control text-center" value="{{ i.quantity }}" style="width: 60px">
+                                                <a class="btn" href="{% url 'increment_quantity' i.id %}" style="border: 1px solid #000;">+</a>
+                                            </div>
+                                            <span class="ms-auto fw-bold">₹{{ i.total_price }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="col-lg-4 order-lg-2 mb-4 r-cart">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            {% if cart_items %}
+                            <h5 class="card-title mb-4">Order Summary</h5>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Items ({{ item_count }})</span>
+                                <span>₹{{ total_cart_price }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Shipping</span>
+                                <span>₹{{ shipping_charge }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Tax</span>
+                                <span>₹{{ tax_amount }}</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between mb-4">
+                                <span class="fw-bold">Total</span>
+                                <span class="fw-bold">₹{{ grand_total }}</span>
+                            </div>
+                            <a  class="btn w-100" href="{% url 'checkout_view'  %}" style="color: #000 !important;">
+                              Order Now
+                            </a>
+                        {% endif %}
+                        </div>
+                    </div>
+    
+                </div>
+                
+            </div>
+            {% else %}
+            <section class="cartitems-container text-center">
+                <div class="cartitems" data-html="list">
+            
+                    <div class="cartitems-empty">
+                      <div class="cartitems-empty--inner">
+                        <i class="fa-solid fa-cart-shopping" style="font-size: 6rem;"></i>
+                        <p>Your cart is empty</p>
+                        <a class="button-primary" href="{% url 'food_menu' %}">
+                            Continue Shopping
+                        </a>
+                        
+                      </div>
+                    </div>
+                  
+                </div>
+            
+                
+              </section>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}
+{% block script %}
+
+    function submitSizeForm(itemId) {
+        var form = document.getElementById('sizeForm_' + itemId);
+        if (form) {
+            form.submit();
+        }
+    }
+
+
+
+{% endblock %}

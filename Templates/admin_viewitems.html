@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}User Details{% endblock %}
+{% block content %}
+      {% include 'admin_form.html' %}
+
+      <div class="container-fluid">
+        <div class="container-fluid">
+          <div class="card">
+            {% for i in food_item %}
+            <div class="card-body">
+              <div class="d-flex">
+                <a href="{% url 'admin_fooditems' %}">Back/</a>
+                <h5 class="card-title fw-semibold mb-4">Food Items</h5>
+              </div>
+              <!-- <div class="card ">
+                <div class="card-body p-4">
+                  <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal" style="float: right;background:#fd7e14;color:#fff;">
+                    Add Items
+                  </button>
+                </div>
+              </div> -->
+              
+              <div class="card mb-3">
+                <div class="row g-0">
+                  <div class="col-md-4">
+                    <img src="{{ i.image.url }}" class="card-img-top" alt="..." style="height: 300px;" >
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ i.name }}</h5>
+                      <p><strong>Price:</strong>{{ i.price }}</p>
+                      <p><strong>Category:</strong>{{ i.category }}</p>
+                      <p></p>
+                      {% if i.description %}
+                      <p class="card-text"><strong>Description:</strong>{{ i.description}}</p>
+                      {% endif %}
+                      {% if i.exclusive_item %}
+                      <span class="badge bg-warning text-dark">Exclusive</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+             
+              
+              <div class="d-flex" style="float: right;">
+                <div >
+                  <form method="POST" action="{% url 'admin_deleteitems' i.id %}" onsubmit="return confirm('Do you really want to delete this?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn mt-1 delete-link btn-danger"  >Delete</button>
+                  </form>
+                </div>
+                <div>
+                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#update" style="float: right;margin: 5px;">Update</button>
+                </div>
+                <!-- <button type="button" class="btn btn-danger" style="float: right;margin: 5px;">Delete</button> -->
+              </div>
+              {% endfor %}
+
+            </div>
+          </div>
+        </div>
+{% endblock %}

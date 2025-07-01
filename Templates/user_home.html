@@ -1,0 +1,452 @@
+{% extends "extend.html" %}
+{% load static %}
+{% block title %}User home{% endblock %}
+{% block content %}
+    
+<!-- banner part start-->
+    <section class="banner_part">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="banner_text">
+                        <div class="banner_text_iner">
+                            <h5>Expensive but the best</h5>
+                            <h1>Deliciousness jumping into the mouth</h1>
+                            <p>Together creeping heaven upon third dominion be upon won't darkness rule land
+                                behold it created good saw after she'd Our set living. Signs midst dominion
+                                creepeth morning</p>
+                            <div class="banner_btn">
+                                <div class="banner_btn_iner">
+                                    <a href="#reservation" class="btn_2">Reservation <img src="{% static 'img/icon/left_1.svg' %}" alt=""></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- banner part start-->
+
+       <!--::exclusive_item_part start::-->
+       
+       {% if exclusive_item %}
+       <section class="exclusive_item_part blog_item_section">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-5">
+                    <div class="section_tittle">
+                        <p>Popular Dishes</p>
+                        <h2>Our Exclusive Items</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                {% for i in exclusive_item %}
+                <div class="col-sm-6 col-lg-4">
+                    <div class="single_blog_item">
+                        <div class="single_blog_img">
+                            <img src="{{ i.image.url }}" alt="" style="height: 400px;">
+                        </div>
+                        <div class="single_blog_text">
+                            <h3>{{ i.name }}</h3>
+                            <a href="{% url 'view_item' i.id %}" class="btn btn-color">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+       </section>
+       {% endif %}
+       <!--::exclusive_item_part end::-->
+
+    <!-- about part start-->
+    <section class="about_part">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-sm-4 col-lg-5 offset-lg-1">
+                    <div class="about_img">
+                        <img src="{% static 'img/about.png' %}" alt="">
+                    </div>
+                </div>
+                <div class="col-sm-8 col-lg-4">
+                    <div class="about_text">
+                        <h5>Our History</h5>
+                        <h2>Where The Food’s As Good
+                            As The Root Beer.</h2>
+                        <h4>Satisfying people hunger for simple pleasures</h4>
+                        <p>May over was. Be signs two. Spirit. Brought said dry own firmament lesser best sixth deep
+                            abundantly bearing, him, gathering you
+                            blessed bearing he our position best ticket in month hole deep </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- about part end-->
+
+    <!-- food_menu start-->
+    <section class="food_menu gray_bg">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-lg-4">
+                    <div class="section_tittle">
+                        <p>Popular Menu</p>
+                        <h2>Delicious Food Menu</h2>
+                    </div>
+                </div>
+                    <div class="col-lg-8 d-flex flex-column align-items-center justify-content-center">
+                        <div class="nav nav-tabs food_menu_nav" id="myTab" role="tablist">
+                            <div class="row justify-content-between align-items-center">
+                                <!-- "All" Tab -->
+                                <div class="col">
+                                    <a 
+                                    href="{% url 'food_menu' %}" aria-selected="{% if selected_category == 'All' %}true{% else %}false{% endif %}">
+                                        All
+                                    </a>
+                                </div>
+                    
+                                <!-- Loop Through Categories -->
+                                {% for i in all_categories %}
+                                <div class="col text-nowrap">
+                                    <a href="{% url 'item_filter' i %}" >
+                                        {{ i }}
+                                    </a>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                
+                
+                    {% if selected_items %}
+                    <div class="col-lg-12">
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active single-member" id="Special" role="tabpanel"
+                                aria-labelledby="Special-tab">
+                                    <div class="scrollable-container">
+                                        <div class="row">
+                                            <!-- Left Column -->
+                                            <div class="col-sm-6 col-lg-6">
+                                                {% for i in selected_items %}
+                                                    {% if forloop.counter <= half_length %}
+                                                        <div class="single_food_item media" style="align-items: center;">
+                                                            <img src="{{ i.image.url }}" class="mr-3" alt="..." >
+                                                            <div class="media-body">
+                                                                <h3>{{ i.name }}</h3>
+                                                                <p id="text-{{ forloop.counter }}">
+                                                                    {{ i.description|slice:":10" }} <!-- First 30 characters -->
+                                                                    <span id="dots-{{ forloop.counter }}">...</span>
+                                                                    <span id="more-{{ forloop.counter }}" style="display: none;">
+                                                                        {{ i.description|slice:"10:" }} <!-- Remaining description -->
+                                                                    </span>
+                                                                    <a href="javascript:void(0);" class="read-more-btn" onclick="toggleReadMore({{ forloop.counter }})">Read More</a>
+                                                                </p>
+                                                                <h5>₹{{ i.price }}</h5>
+                                                                {% if request.user.is_active == 1 %}
+                                                                <div class="buttons-container">
+                                                                    <a class="add-to-cart" href="{% url 'add_cart' i.id %}">Add to Cart</a>
+                                                                    <a class="buy-now" href="{% url 'buynow' i.id %}">Buy Now</a>
+                                                                </div>
+                                                            
+                                                                {% else %}
+                                                                <div class="buttons-container">
+                                                                    <a class="add-to-cart" data-bs-toggle="modal" data-bs-target="#loginModal">Add to Cart</a>
+                                                                    <a class="buy-now" data-bs-toggle="modal" data-bs-target="#loginModal">Buy Now</a>
+                                                                </div>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+
+                                            <!-- Right Column -->
+                                            <div class="col-sm-6 col-lg-6">
+                                                {% for i in selected_items %}
+                                                    {% if forloop.counter > half_length %}
+                                                        <div class="single_food_item media" style="align-items: center;">
+                                                            <img src="{{ i.image.url }}" class="mr-3" alt="..." style="width: fit-content;height: 40vh;">
+                                                            <div class="media-body">
+                                                                <h3>{{ i.name }}</h3>
+                                                                <p id="text-{{ forloop.counter }}">
+                                                                    {{ i.description|slice:":10" }} <!-- First 30 characters -->
+                                                                    <span id="dots-{{ forloop.counter }}">...</span>
+                                                                    <span id="more-{{ forloop.counter }}" style="display: none;">
+                                                                        {{ i.description|slice:"10:" }} <!-- Remaining description -->
+                                                                    </span>
+                                                                    <a href="javascript:void(0);" class="read-more-btn" onclick="toggleReadMore({{ forloop.counter }})">Read More</a>
+                                                                </p>
+                                                                <h5>₹{{ i.price }}</h5>
+                                                                {% if request.user.is_active == 1 %}
+                                                                <div class="buttons-container">
+                                                                    <a class="add-to-cart" href="{% url 'add_cart' i.id %}">Add to Cart</a>
+                                                                    <a class="buy-now" href="{% url 'buynow' i.id %}">Buy Now</a>
+                                                                </div>
+                                                                {% else %}
+                                                                <div class="buttons-container">
+                                                                    <a class="add-to-cart" data-bs-toggle="modal" data-bs-target="#loginModal">Add to Cart</a>
+                                                                    <a class="buy-now" data-bs-toggle="modal" data-bs-target="#loginModal">Buy Now</a>
+                                                                </div>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% else %}
+                    <div class="col-lg-12">
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active single-member" id="Special" role="tabpanel"
+                                aria-labelledby="Special-tab">
+                                    <div class="scrollable-container">
+                                        <div class="row">
+                                            <!-- Left Column -->
+                                            <div class="col-sm-6 col-lg-6">
+                                                {% for i in food_items %}
+                                                    {% if forloop.counter <= half_length %}
+                                                        <div class="single_food_item media" style="align-items: center;">
+                                                            <img src="{{ i.image.url }}" class="mr-3" alt="..." >
+                                                            <div class="media-body">
+                                                                <h3>{{ i.name }}</h3>
+                                                                <p id="text-{{ forloop.counter }}">
+                                                                    {{ i.description|slice:":10" }} <!-- First 30 characters -->
+                                                                    <span id="dots-{{ forloop.counter }}">...</span>
+                                                                    <span id="more-{{ forloop.counter }}" style="display: none;">
+                                                                        {{ i.description|slice:"10:" }} <!-- Remaining description -->
+                                                                    </span>
+                                                                    <a href="javascript:void(0);" class="read-more-btn" onclick="toggleReadMore({{ forloop.counter }})">Read More</a>
+                                                                </p>
+                                                                <h5>₹{{ i.price }}</h5>
+                                                                {% if request.user.is_active == 1 %}
+                                                                <div class="buttons-container">
+                                                                    <a class="add-to-cart"href="{% url 'add_cart' i.id %}">Add to Cart</a>
+                                                                    <a class="buy-now" href="{% url 'buynow' i.id %}">Buy Now</a>
+                                                                </div>
+                                                                {% else %}
+                                                                <div class="buttons-container">
+                                                                    <a class="add-to-cart" data-bs-toggle="modal" data-bs-target="#loginModal">Add to Cart</a>
+                                                                    <a class="buy-now" data-bs-toggle="modal" data-bs-target="#loginModal">Buy Now</a>
+                                                                </div>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+
+                                            <!-- Right Column -->
+                                            <div class="col-sm-6 col-lg-6">
+                                                {% for i in food_items %}
+                                                    {% if forloop.counter > half_length %}
+                                                        <div class="single_food_item media" style="align-items: center;">
+                                                            <img src="{{ i.image.url }}" class="mr-3" alt="..." >
+                                                            <div class="media-body">
+                                                                <h3>{{ i.name }}</h3>
+                                                                <p id="text-{{ forloop.counter }}">
+                                                                    {{ i.description|slice:":10" }} <!-- First 30 characters -->
+                                                                    <span id="dots-{{ forloop.counter }}">...</span>
+                                                                    <span id="more-{{ forloop.counter }}" style="display: none;">
+                                                                        {{ i.description|slice:"10:" }} <!-- Remaining description -->
+                                                                    </span>
+                                                                    <a href="javascript:void(0);" class="read-more-btn" onclick="toggleReadMore({{ forloop.counter }})">Read More</a>
+                                                                </p>
+                                                                <h5>₹{{ i.price }}</h5>
+                                                                {% if request.user.is_active == 1 %}
+                                                                <div class="buttons-container">
+                                                                    <a class="add-to-cart" href="{% url 'add_cart' i.id %}">Add to Cart</a>
+                                                                    <a class="buy-now" href="{% url 'buynow' i.id %}">Buy Now</a>
+                                                                </div>
+                                                                {% else %}
+                                                                <div class="buttons-container">
+                                                                    <a class="add-to-cart" data-bs-toggle="modal" data-bs-target="#loginModal">Add to Cart</a>
+                                                                    <a class="buy-now" data-bs-toggle="modal" data-bs-target="#loginModal">Buy Now</a>
+                                                                </div>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+            </div>
+        </div>
+    </section>
+    <!-- food_menu part end-->
+
+    <!--::chefs_part start::-->
+    <section class="chefs_part blog_item_section section_padding">
+        <div class="container">
+        {% if chefs %}
+            <div class="row">
+                <div class="col-xl-5">
+                    <div class="section_tittle">
+                        <p>Team Member</p>
+                        <h2>Our Experience Chefs</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                {% for i in chefs %}
+                <div class="col-sm-6 col-lg-4">
+                    <div class="single_blog_item p-4">
+                        <div class="single_blog_img">
+                            <img src="{{ i.image.url }}" alt=""  style="height: 300px;">
+                        </div>
+                        <div class="single_blog_text text-center">
+                            <h3>Chef {{ i.name }}</h3>
+                            <p>{{ i.specialty }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+        <div style="text-align: center;">
+            <h2>There is no Chefs found!</h2>
+        </div>
+        {% endif %}
+        </div>
+    </section>
+    <!--::chefs_part end::-->
+
+    <!--::regervation_part start::-->
+    <section class="regervation_part section_padding" id="reservation">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-5">
+                    <div class="section_tittle">
+                        <p>Reservation</p>
+                        <h2>Book A Table</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="regervation_part_iner">
+                        <form method="post" action="{% url 'user_home' %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <input type="name" class="form-control" name="name" placeholder="Name *" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input type="email" class="form-control" name="email"
+                                        placeholder="Email address *" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input type="number" class="form-control" name="guest" style="background-color: transparent;" placeholder="Guest *" required>
+                                    
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input type="text" class="form-control" name="phone" placeholder="Phone number *" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <div class="input-group date">
+                                        <input id="datepicker" type="text" name="date" class="form-control" placeholder="Date *" required/>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <select class="form-control" id="time" name="time" required>
+                                        <option value="" selected>Time *</option>
+                                        {% for value, label in time_choice %}
+                                            <option value="{{ value }}">{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <textarea class="form-control" name="note"  rows="4"
+                                        placeholder="Your Note *"></textarea>
+                                </div>
+                            </div>
+                            <div class="regerv_btn">
+                                <button type="submit" class="btn_4">Book A Table</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--::regervation_part end::-->
+
+    <!--::review_part start::-->
+    <section class="review_part gray_bg section_padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-5">
+                    <div class="section_tittle">
+                        <p>Testimonials</p>
+                        <h2>Customers Feedback</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-11">
+                    <div class="client_review_part owl-carousel">
+                        <div class="client_review_single media">
+                            <div class="client_img align-self-center">
+                                <img src="{% static 'img/client/client3.jpg' %}" alt="">
+                            </div>
+                            <div class="client_review_text media-body">
+                                <p>"Amazing flavors and excellent presentation! The staff was friendly, and the dessert was the highlight of the evening. Highly recommend!"</p>
+                                <h4>Rahul Verma, <span>Software Engineer</span></h4>
+                            </div>
+                        </div>
+                        <div class="client_review_single media">
+                            <div class="client_img align-self-center">
+                                <img src="{% static 'img/client/client2.png' %}" alt="">
+                            </div>
+                            <div class="client_review_text media-body">
+                                <p>"The food was absolutely delicious, and the service was top-notch! The ambiance made it a perfect place for family dinners. Will definitely be back!"</p>
+                                <h4>Ajmal Khan, <span>Food Blogger</span></h4>
+                            </div>
+                        </div>
+                        <div class="client_review_single media">
+                            <div class="client_img align-self-center">
+                                <img src="{% static 'img/client/client4.png' %}" alt="">
+                            </div>
+                            <div class="client_review_text media-body">
+                                <p>"Great value for money! The biryani was rich in flavor, and the staff was very attentive. Perfect spot for casual hangouts with friends!"</p>
+                                <h4>Mohan Nair, <span>Marketing Manager</span></h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--::review_part end::-->
+
+   
+{% endblock %}
+{% block script %}
+    function toggleReadMore(id) {
+      const dots = document.getElementById("dots-" + id);
+      const moreText = document.getElementById("more-" + id);
+      const btnText = document.querySelector("#text-" + id + " .read-more-btn");
+  
+      if (moreText.style.display === "none") {
+        dots.style.display = "none";
+        moreText.style.display = "inline";
+        btnText.textContent = "Read Less";
+      } else {
+        dots.style.display = "inline";
+        moreText.style.display = "none";
+        btnText.textContent = "Read More";
+      }
+    }
+  
+{% endblock %}

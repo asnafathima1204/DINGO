@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Order Details{% endblock %}
+{% block content %}
+  
+      <div class="container-fluid">
+        <div class="container-fluid">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title fw-semibold mb-4">Order details</h5>
+              <div class="card mb-0">
+                {% if order %}
+                <div class="card-body p-4">
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                      <thead>
+                        <tr>
+                          <th scope="col">S/N</th>
+                          <th scope="col"  class="text-nowrap">Order ID</th>
+                          <th scope="col"  class="text-nowrap">Status</th>
+                          <th scope="col">Date</th>
+                          <th scope="col"  class="text-nowrap">Customer Name</th>
+                          <th scope="col">Address</th>
+                          <th scope="col">Amount</th>
+                          <th scope="col"  class="text-nowrap"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for i in order %}
+                        <tr class="orderDetailTableRow">
+                          <th scope="row">{{ forloop.counter }}</th>
+                          <td >{{ i.id }}</td>
+                          <!-- Status column -->
+                          <td class="d-flex align-items-center">
+                            {% if request.GET.edit_id == i.id|slugify %}
+                            <!-- Form appears when you click the icon -->
+                            <form method="POST" action="{% url 'admin_order_list' %}" class="d-flex">
+                                {% csrf_token %}
+                                <input type="hidden" name="order_id" value="{{ i.id }}">
+                                <select name="status" class="form-control form-control-sm me-2">
+                                    <option value="pending"  {% if i.status == "pending" %}selected{% endif %}>Pending</option>
+                                    <option value="shipped" {% if i.status == "shipped" %}selected{% endif %}>Shipped</option>
+                                    <option value="delivered" {% if i.status == "delivered" %}selected{% endif %}>Delivered</option>
+                                    <option value="cancelled" {% if i.status == "cancelled" %}selected{% endif %}>Cancelled</option>
+                                </select>
+                                <button type="submit" class="btn btn-success btn-sm">Save</button>
+                                <a href="{% url 'admin_order' %}" class="btn btn-secondary btn-sm ms-1">Cancel</a>
+                            </form>
+                            {% else %}
+                            <!-- Display status with pencil icon -->
+                              <span>{{ i.status }}</span>
+                              {% if i.status == 'pending' or i.status == 'shipped' %}
+                              <a class="btn btn-sm ms-2 btnOrder" href="?edit_id={{ i.id|slugify }}">
+                                  <i class="ti ti-pencil"></i>
+                              </a>
+                              {% endif%}
+                            {% endif %}
+                          </td>
+                          <td class="text-nowrap">{{ i.ordered_date|date:"d-m-Y" }}</td>
+                          <td class="text-nowrap">{{ i.user.first_name }} {{ i.user.last_name }}</td>
+                          <td >{{ i.address }}</td>
+                          <td>{{ i.total }}</td>
+                          <td class="text-nowrap">
+                            <a class="btn btnOrder" href="{% url 'admin_vieworder' i.id %}">View</a></td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                {% else %}
+                  <div style="text-align: center;">
+                    <p>There is no orders received yet!!</p>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}

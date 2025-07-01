@@ -1,0 +1,302 @@
+{% extends "extend.html" %}
+{% load static %}
+{% block title %}Food Menu{% endblock %}
+{% block style %}
+ .search_input, .search_btn{
+    height:50px ;
+ }
+ .search_input{
+    width:50%;
+    opacity:0.5;
+ }
+ .search_btn{
+    padding: 10px 2rem;
+    background:#ff9200 !important;
+    border_radius:10px;
+    height:49px;
+    font-size:1.2rem;
+    font-weight:600;
+ }
+ .not_found{
+    text-align:center;
+    padding:10vh 0;
+ }
+ @media (max-width: 1440px) {
+    .add-to-cart,.buy-now{
+        font-size: 9px;
+    }
+ }
+ @media (max-width: 768px) {
+    .food_menu .single_food_item .media-body h3 {
+        font-size: 15px;
+        font-weight: 700;
+    }
+    .add-to-cart,.buy-now,.search_btn{
+        font-size: 12px;
+    }
+    .food_menu .nav-tabs a:last-child {
+        padding: 5px 10px 15px;
+        font-size: 10px;
+        padding: 0px;
+    }
+    .search_btn{
+        background:#ff9200 !important;
+        border_radius:10px;
+        height:49px;
+        font-size:1rem;
+        font-weight:600;
+     }
+ }
+{% endblock %}
+{% block content %}
+    {% include 'login_form.html' %}
+
+    <!-- breadcrumb start-->
+    <section class="breadcrumb breadcrumb_bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb_iner text-center">
+                        <div class="breadcrumb_iner_item">
+                            <h2>Food Menu</h2>
+                            <form action="{% url 'food_menu' %}" method="get" enctype="multipart/form-data">
+                            {% csrf_token %}
+                                <input type="text" name="search"  class="search_input" id="search">
+                                <button class="search_btn" type="submit">Search</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- breadcrumb start-->
+
+  
+    <!-- food_menu start-->
+    <section class="food_menu gray_bg">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-lg-4">
+                    <div class="section_tittle">
+                        <p>Popular Menu</p>
+                        <h2>Delicious Food Menu</h2>
+                    </div>
+                </div>
+                <div class="col-lg-8 d-flex flex-column align-items-center justify-content-center">
+                    <div class="nav nav-tabs food_menu_nav" id="myTab" role="tablist">
+                        <div class="row justify-content-between align-items-center">
+                            <!-- "All" Tab -->
+                            <div class="col">
+                                <a
+                                   href="{% url 'food_menu' %}" aria-selected="{% if selected_category == 'All' %}true{% else %}false{% endif %}">
+                                    All 
+                                </a>
+                            </div>
+                
+                            <!-- Loop Through Categories -->
+                            {% for i in all_categories %}
+                            <div class="col text-nowrap">
+                                <a href="{% url 'item_filter' i %}">
+                                    {{ i }} 
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                
+                {% if selected_items %}
+                <div class="col-lg-12">
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active single-member" id="Special" role="tabpanel"
+                            aria-labelledby="Special-tab">
+                                <div class="scrollable-container">
+                                    <div class="row">
+                                        <!-- Left Column -->
+                                        <div class="col-sm-6 col-lg-6">
+                                            {% for i in selected_items %}
+                                                {% if forloop.counter <= half_length %}
+                                                    <div class="single_food_item media" style="align-items: center;">
+                                                        <img src="{{ i.image.url }}" class="mr-3" alt="..." style="height: 164px;" >
+                                                        <div class="media-body">
+                                                            <h3>{{ i.name }}</h3>
+                                                            <p id="text-{{ forloop.counter }}">
+                                                                {{ i.description|slice:":10" }} <!-- First 30 characters -->
+                                                                <span id="dots-{{ forloop.counter }}">...</span>
+                                                                <span id="more-{{ forloop.counter }}" style="display: none;">
+                                                                    {{ i.description|slice:"10:" }} <!-- Remaining description -->
+                                                                </span>
+                                                                <a href="javascript:void(0);" class="read-more-btn" onclick="toggleReadMore({{ forloop.counter }})">Read More</a>
+                                                            </p>
+                                                            <h5>₹{{ i.price }}</h5>
+                                                            {% if request.user.is_active == 1 %}
+                                                            <div class="buttons-container">
+                                                                <a class="add-to-cart" href="{% url 'add_cart' i.id %}">Add to Cart</a>
+                                                                <a class="buy-now" href="{% url 'buynow' i.id %}">Buy Now</a>
+                                                            </div>
+                                                           
+                                                            {% else %}
+                                                            <div class="buttons-container">
+                                                                <a class="add-to-cart" data-bs-toggle="modal" data-bs-target="#loginModal">Add to Cart</a>
+                                                                <a class="buy-now" data-bs-toggle="modal" data-bs-target="#loginModal">Buy Now</a>
+                                                            </div>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+
+                                        <!-- Right Column -->
+                                        <div class="col-sm-6 col-lg-6">
+                                            {% for i in selected_items %}
+                                                {% if forloop.counter > half_length %}
+                                                    <div class="single_food_item media" style="align-items: center;">
+                                                        <img src="{{ i.image.url }}" class="mr-3" alt="..." >
+                                                        <div class="media-body">
+                                                            <h3>{{ i.name }}</h3>
+                                                            <p id="text-{{ forloop.counter }}">
+                                                                {{ i.description|slice:":10" }} <!-- First 30 characters -->
+                                                                <span id="dots-{{ forloop.counter }}">...</span>
+                                                                <span id="more-{{ forloop.counter }}" style="display: none;">
+                                                                    {{ i.description|slice:"10:" }} <!-- Remaining description -->
+                                                                </span>
+                                                                <a href="javascript:void(0);" class="read-more-btn" onclick="toggleReadMore({{ forloop.counter }})">Read More</a>
+                                                            </p>
+                                                            <h5>₹{{ i.price }}</h5>
+                                                            {% if request.user.is_active == 1 %}
+                                                            <div class="buttons-container">
+                                                                <a class="add-to-cart" href="{% url 'add_cart' i.id %}">Add to Cart</a>
+                                                                <a class="buy-now" href="{% url 'buynow' i.id %}">Buy Now</a>
+                                                            </div>
+                                                            {% else %}
+                                                            <div class="buttons-container">
+                                                                <a class="add-to-cart" data-bs-toggle="modal" data-bs-target="#loginModal">Add to Cart</a>
+                                                                <a class="buy-now" data-bs-toggle="modal" data-bs-target="#loginModal">Buy Now</a>
+                                                            </div>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% else %}
+                <div class="col-lg-12">
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active single-member" id="Special" role="tabpanel"
+                            aria-labelledby="Special-tab">
+                                <div class="scrollable-container">
+                                    <div class="row">
+                                    {% if food_items %}
+                                        <!-- Left Column -->
+                                        <div class="col-sm-6 col-lg-6">
+                                            {% for i in food_items %}
+                                                {% if forloop.counter <= half_length %}
+                                                    <div class="single_food_item media" style="align-items: center;">
+                                                        <img src="{{ i.image.url }}" class="mr-3" alt="..." >
+                                                        <div class="media-body">
+                                                            <h3>{{ i.name }}</h3>
+                                                            <p id="text-{{ forloop.counter }}">
+                                                                {{ i.description|slice:":10" }} <!-- First 30 characters -->
+                                                                <span id="dots-{{ forloop.counter }}">...</span>
+                                                                <span id="more-{{ forloop.counter }}" style="display: none;">
+                                                                    {{ i.description|slice:"10:" }} <!-- Remaining description -->
+                                                                </span>
+                                                                <a href="javascript:void(0);" class="read-more-btn" onclick="toggleReadMore({{ forloop.counter }})">Read More</a>
+                                                            </p>
+                                                            <h5>₹{{ i.price }}</h5>
+                                                            {% if request.user.is_active == 1 %}
+                                                            <div class="buttons-container">
+                                                                <a class="add-to-cart"href="{% url 'add_cart' i.id %}">Add to Cart</a>
+                                                                <a class="buy-now" href="{% url 'buynow' i.id %}">Buy Now</a>
+                                                            </div>
+                                                            {% else %}
+                                                            <div class="buttons-container">
+                                                                <a class="add-to-cart" data-bs-toggle="modal" data-bs-target="#loginModal">Add to Cart</a>
+                                                                <a class="buy-now" data-bs-toggle="modal" data-bs-target="#loginModal">Buy Now</a>
+                                                            </div>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+
+                                        <!-- Right Column -->
+                                        <div class="col-sm-6 col-lg-6">
+                                            {% for i in food_items %}
+                                                {% if forloop.counter > half_length %}
+                                                    <div class="single_food_item media" style="align-items: center;">
+                                                        <img src="{{ i.image.url }}" class="mr-3" alt="..." >
+                                                        <div class="media-body">
+                                                            <h3>{{ i.name }}</h3>
+                                                            <p id="text-{{ forloop.counter }}">
+                                                                {{ i.description|slice:":10" }} <!-- First 30 characters -->
+                                                                <span id="dots-{{ forloop.counter }}">...</span>
+                                                                <span id="more-{{ forloop.counter }}" style="display: none;">
+                                                                    {{ i.description|slice:"10:" }} <!-- Remaining description -->
+                                                                </span>
+                                                                <a href="javascript:void(0);" class="read-more-btn" onclick="toggleReadMore({{ forloop.counter }})">Read More</a>
+                                                            </p>
+                                                            <h5>₹{{ i.price }}</h5>
+                                                            {% if request.user.is_active == 1 %}
+                                                            <div class="buttons-container">
+                                                                <a class="add-to-cart" href="{% url 'add_cart' i.id %}">Add to Cart</a>
+                                                                <a class="buy-now" href="{% url 'buynow' i.id %}">Buy Now</a>
+                                                            </div>
+                                                            {% else %}
+                                                            <div class="buttons-container">
+                                                                <a class="add-to-cart" data-bs-toggle="modal" data-bs-target="#loginModal">Add to Cart</a>
+                                                                <a class="buy-now" data-bs-toggle="modal" data-bs-target="#loginModal">Buy Now</a>
+                                                            </div>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    
+                                    {% else %}
+                                        <div class="not_found">
+                                            <i class="fa-solid fa-triangle-exclamation" style="font-size: 6rem;color: red;"></i>
+                                            <h1>Sorry! No Item Found</h1>
+                                        </div>
+                                    {% endif %}
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    <!-- food_menu part end-->
+
+{% endblock %}
+{% block script %}
+
+function toggleReadMore(counter) {
+    const dots = document.getElementById(`dots-${counter}`);
+    const moreText = document.getElementById(`more-${counter}`);
+    const btn = document.querySelector(`#text-${counter} .read-more-btn`);
+
+    if (dots.style.display === "none") {
+        dots.style.display = "inline";
+        moreText.style.display = "none";
+        btn.innerText = "Read More";
+    } else {
+        dots.style.display = "none";
+        moreText.style.display = "inline";
+        btn.innerText = "Read Less";
+    }
+}
+{% endblock %}

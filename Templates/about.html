@@ -1,0 +1,95 @@
+{% extends "extend.html" %}
+{% load static %}
+{% block title %}About{% endblock %}
+{% block content %}
+    {% include 'login_form.html' %}
+
+    <!-- breadcrumb start-->
+    <section class="breadcrumb breadcrumb_bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb_iner text-center">
+                        <div class="breadcrumb_iner_item">
+                            <h2>About Us</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- breadcrumb start-->
+
+    <!-- about part start-->
+    <section class="about_part about_bg">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-sm-4 col-lg-5 offset-lg-1">
+                    <div class="about_img">
+                        <img src="{% static 'img/about.png' %}" alt="">
+                    </div>
+                </div>
+                <div class="col-sm-8 col-lg-4">
+                    <div class="about_text">
+                        <h5>Our History</h5>
+                        <h2>Where The Food’s As Good
+                            As The Root Beer.</h2>
+                        <h4>Satisfying people hunger for simple pleasures</h4>
+                        <p>May over was. Be signs two. Spirit. Brought said dry own firmament lesser best sixth deep
+                            abundantly bearing, him, gathering you
+                            blessed bearing he our position best ticket in month hole deep </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- about part end-->
+    <!--::review_part start::-->
+    <section class="review_part gray_bg section_padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-5">
+                    <div class="section_tittle">
+                        <p>Testimonials</p>
+                        <h2>Customers Feedback</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-11">
+                    <div class="client_review_part owl-carousel">
+                        <div class="client_review_single media">
+                            <div class="client_img align-self-center">
+                                <img src="{% static 'img/client/client3.jpg' %}" alt="">
+                            </div>
+                            <div class="client_review_text media-body">
+                                <p>"Amazing flavors and excellent presentation! The staff was friendly, and the dessert was the highlight of the evening. Highly recommend!"</p>
+                                <h4>Rahul Verma, <span>Software Engineer</span></h4>
+                            </div>
+                        </div>
+                        <div class="client_review_single media">
+                            <div class="client_img align-self-center">
+                                <img src="{% static 'img/client/client2.png' %}" alt="">
+                            </div>
+                            <div class="client_review_text media-body">
+                                <p>"The food was absolutely delicious, and the service was top-notch! The ambiance made it a perfect place for family dinners. Will definitely be back!"</p>
+                                <h4>Ajmal Khan, <span>Food Blogger</span></h4>
+                            </div>
+                        </div>
+                        <div class="client_review_single media">
+                            <div class="client_img align-self-center">
+                                <img src="{% static 'img/client/client4.png' %}" alt="">
+                            </div>
+                            <div class="client_review_text media-body">
+                                <p>"Great value for money! The biryani was rich in flavor, and the staff was very attentive. Perfect spot for casual hangouts with friends!"</p>
+                                <h4>Mohan Nair, <span>Marketing Manager</span></h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--::review_part end::-->
+    
+{% endblock %}

@@ -1,0 +1,278 @@
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Item Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="post" action="{% url 'admin_additems' %}" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group ">
+                        <label for="item_id">Item id:</label>
+                        <input type="text" class="form-control" id="itemId" name="item_id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Catogery:</label>
+                        <input type="text" class="form-control" id="category" name="category" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Price:</label>
+                        <input type="number" class="form-control" step="0.01"  id="price" name="price" required>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description:</label>
+                        <textarea class="form-control" id="description" rows="3" name="description"></textarea>
+                    </div>   
+                
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                  </div>
+                  <div class="form-group">
+                     <label>Category Type:</label>
+                     <select name="category_type" class="form-control" id="category_type">
+                        <option value="1" >Category1(S,M,L)</option>
+                        <option value="2" >Category2(Quarter,Half,Full)</option>
+                        <option value="3" >Category3(regular,large)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                     <label>Exclusive Item:</label>
+                     <select name="exclusive_item" class="form-control" id="exclusive_item">
+                      <option value="False">No</option>
+                      <option value="True" >Yes</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="image">Image:</label>
+                    <input type="file" class="form-control-file" id="image" name="image" required>
+                </div>  
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn" style="background:#fd7e14;color:#fff;">Save</button>
+              </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  
+  <!-- update form -->
+  <div class="modal fade" id="update" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Update Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          
+          {% for i in food_item %}
+          <form method="post" action="{% url 'admin_edititems' i.id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-lg-6">
+                  <div class="form-group ">
+                      <label for="item_id">Item id:</label>
+                      <input type="text" class="form-control" id="itemId" name="item_id" value="{{ i.item_id }}">
+                  </div>
+                  <div class="form-group">
+                      <label for="category">Catogery:</label>
+                      <input type="text" class="form-control" id="category" name="category" value="{{ i.category }}">
+                  </div>
+                  <div class="form-group">
+                      <label for="price">Price:</label>
+                      <input type="number" class="form-control" id="price" name="price" value="{{ i.price }}">
+                  </div>
+                  <div class="form-group">
+                      <label for="description">Description:</label>
+                      <textarea class="form-control" id="description" rows="3" name="description">{{ i.description }}</textarea>
+                  </div>   
+              
+              </div>
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label for="name">Name:</label>
+                  <input type="text" class="form-control" id="name" name="name" value="{{ i.name }}">
+                </div>
+                <div class="form-group">
+                     <label>Category Type:</label>
+                     <select name="category_type" class="form-control" id="category_type">
+                        <option value="1" >Category1(S,M,L)</option>
+                        <option value="2" >Category2(Quarter,Half,Full)</option>
+                        <option value="3" >Category3(regular,large)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Exclusive Item:</label>
+                    <select name="exclusive_item" class="form-control" id="exclusive_item">
+                      <option value="False" {% if not i.exclusive_item %}selected{% endif %}>No</option>
+                      <option value="True" {% if i.exclusive_item %}selected{% endif %}>Yes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                  <label for="image">Current Image:</label>
+                  <!-- Display the existing image -->
+                  {% if i.image %}
+                      <img src="{{ i.image.url }}" alt="Item Image" style="width: 150px; height: 150px; margin-bottom: 10px;">
+                  {% else %}
+                      <p>No image available</p>
+                  {% endif %}
+          
+                  <!-- Upload new image -->
+                  <label for="image">Upload New Image:</label>
+                  <input type="file" class="form-control-file" id="image" name="image">
+                </div> 
+              </div>
+            </div>
+           
+            <div class="modal-footer">
+              <button type="submit" class="btn" style="background:#fd7e14;color:#fff;">Save</button>
+            </div>
+          </form>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+  
+
+
+<!-- Modal Chef-->
+<div class="modal fade" id="chefForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Item Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{% url 'admin_addchef' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-lg-6">
+                  <div class="form-group">
+                      <label for="chef_id">Chef's ID:</label>
+                      <input type="text" class="form-control" id="chef_id" name="chef_id" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="experience">Experience:</label>
+                      <input type="number" class="form-control" id="experience" name="experience" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="bio">Bio:</label>
+                    <textarea class="form-control" id="bio" rows="3" name="bio"></textarea>
+                  </div>  
+              </div>
+              <div class="col-lg-6">
+                  <div class="form-group ">
+                      <label for="name">Name:</label>
+                      <input type="text" class="form-control" id="name" name="name" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="specialty">Specialty:</label>
+                      <input type="text" class="form-control" id="specialty" name="specialty" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="image">Image:</label>
+                    <input type="file" class="form-control-file" id="image" name="image" required>
+                  </div> 
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn" style="background:#fd7e14;color:#fff;">Save</button>
+            </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+  <!-- update Chef form -->
+  <div class="modal fade" id="chefUpdateForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Update Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            {% if chef.id %}
+            <form method="post" action="{% url 'admin_editchef' chef.id %}" enctype="multipart/form-data">
+            {% else %}
+            <form method="post" action="#">  <!-- Fallback to avoid error -->
+            {% endif %}
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-lg-6">
+                  <div class="form-group">
+                    <h1>{{chefs.id}}</h1>
+                      <label for="chef_id">Chef's ID:</label>
+                      <input type="text" class="form-control" id="chef_id" name="chef_id" value="{{ chef.chef_id }}">
+                  </div>
+                  <div class="form-group">
+                      <label for="experience">Experience:</label>
+                      <input type="number" class="form-control" id="experience" name="experience" value="{{ chef.experience }}">
+                  </div>
+                  <div class="form-group">
+                    <label for="bio">Bio:</label>
+                    <textarea class="form-control" id="bio" rows="3" name="bio">{{ chef.bio }}</textarea>
+                  </div>  
+              </div>
+              <div class="col-lg-6">
+                  <div class="form-group ">
+                      <label for="name">Name:</label>
+                      <input type="text" class="form-control" id="name" name="name" value="{{ chef.name }}">
+                  </div>
+                  <div class="form-group">
+                      <label for="specialty">Specialty:</label>
+                      <input type="text" class="form-control" id="specialty" name="specialty" value="{{ chef.specialty }}">
+                  </div>
+                  <div class="form-group">
+                    <label for="image">Current Image:</label>
+                    <!-- Display the existing image -->
+                    {% if chef.image %}
+                        <img src="{{ chef.image.url }}" alt="Chef Image" style="width: 150px; height: 150px; margin-bottom: 10px;">
+                    {% else %}
+                        <p>No image available</p>
+                    {% endif %}
+            
+                    <!-- Upload new image -->
+                    <label for="image">Upload New Image:</label>
+                    <input type="file" class="form-control-file" id="image" name="image">
+                  </div> 
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn" style="background:#fd7e14;color:#fff;">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

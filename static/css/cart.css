@@ -1,0 +1,21 @@
+.cartitems-container{
+    padding: 5rem 0;
+    background-color: #ddd;
+
+}
+.cartitems{
+    padding: 2rem 0;
+    text-align: center;
+    align-content: center;
+}
+.cartitems a{
+    background-color: #ff6426;
+    padding: 10px 20px;
+    color: #fff;
+    text-decoration: none;
+}
+.cartitems a:hover{
+    background-color: #000;
+
+}
+

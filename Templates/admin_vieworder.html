@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}User Details{% endblock %}
+{% block content %}
+
+      {% include 'admin_form.html' %}
+
+      <div class="container-fluid">
+        <div class="container-fluid">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex">
+                <a href="{% url 'admin_order' %}">Back/</a>
+                <h5 class="card-title fw-semibold mb-4">Order Items</h5>
+              </div>
+              <div class="card mb-0">
+                <div class="card-body p-4">
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                      <thead>
+                        <tr>
+                          <th>Item name</th>
+                          <th>Item Id</th>
+                          <th>Quantity</th>
+                          <th>Price/item</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for i in order_items %}
+                        <tr>
+                            <td>
+                              <div class="item-div d-flex align-items-center">
+                                  <div class="img-div">
+                                      <img src="{{ i.item.image.url }}" alt="{{ i.item.name }}" width="80" height="80">
+                                  </div>
+                                  <div class="item-name-div">
+                                      <h6 class="itemname_display">{{ i.item.name }} ({{ i.size }})</h6>
+                                      <p class="category-display">{{ i.item.category }}</p>
+                                  </div>
+                              </div>
+                            </td>
+                            <td>{{ i.item.item_id }}</td>
+                            <td>{{ i.quantity }}</td>
+                            <td>{{ i.size_oriented_price }}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="container-fluid">
+              <div class="d-flex">
+                <div class="card ms-auto" style="width: 50%; max-width: 350px;">
+                  <div class="card-body orderBox" >
+                    {% if order_items %}
+                      <h5 class="card-title mb-4">Order Summary</h5>
+                      <!-- <div class="d-flex justify-content-between mb-3">
+                          <span>Items ({{ item_count }})</span>
+                          <span>₹{{ total_cart_price }}</span>
+                      </div> -->
+                      <div class="d-flex justify-content-between mb-3">
+                        <span>Subtotal</span>
+                        <span>₹{{ subtotal }}</span>
+                      </div>
+                      <div class="d-flex justify-content-between mb-3">
+                          <span>Shipping</span>
+                          <span>₹{{ order.shipping }}</span>
+                      </div>
+                      <div class="d-flex justify-content-between mb-3">
+                          <span>Tax</span>
+                          <span>₹{{ order.tax }}</span>
+                      </div>
+                      <hr style="border: 1px solid #ccc; margin: 10px 0; opacity: 1;">
+                      <div class="d-flex justify-content-between mb-4">
+                          <span class="fw-bold">Total</span>
+                          <span class="fw-bold">₹{{ order.total }}</span>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+             
+              
+              <!-- <div class="d-flex" style="float: right;">
+                <div >
+                  <form method="POST" action="" onsubmit="return confirm('Do you really want to delete this?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn mt-1 delete-link btn-danger"  >Delete</button>
+                  </form>
+                </div>
+                <div>
+                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#update" style="float: right;margin: 5px;">Update</button>
+                </div>
+              </div> -->
+
+        </div>
+      </div>
+{% endblock %}

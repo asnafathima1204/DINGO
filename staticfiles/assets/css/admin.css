@@ -1,0 +1,16 @@
+td,th{
+    align-content: center;
+}
+.left-sidebar .scroll-sidebar {
+    overflow-y: auto;
+    padding: 0px;
+    height: calc(100vh - 80px);
+    border-radius: 7px;
+}
+.sidebar-nav ul .sidebar-item .sidebar-link {
+    text-decoration: none;
+}
+.dropdown button{
+    border: none;
+    background: none;
+}

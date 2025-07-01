@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}User Details{% endblock %}
+{% block content %}
+      {% include 'admin_form.html' %}
+
+      <div class="container-fluid">
+        <div class="container-fluid">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex">
+                <a href="{% url 'admin_chef' %}">Back/</a>
+                <h5 class="card-title fw-semibold mb-4">Chef's Details</h5>
+              </div>
+              <!-- <div class="card ">
+                <div class="card-body p-4">
+                  <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal" style="float: right;background:#fd7e14;color:#fff;">
+                    Add Items
+                  </button>
+                </div>
+              </div> -->
+              
+              <div class="card mb-3">
+                <div class="row g-0">
+                  <div class="col-lg-4 col-sm-12" >
+                    {% if chef.image %}
+                        <img src="{{ chef.image.url }}" alt="{{ chef.name }}" style="width:100%;height: 100%;" name="viewChef">
+                    {% else %}
+                        <p>No image available</p>
+                    {% endif %}
+                  </div>
+                  <div class="col-md-8 col-sm-12">
+                    <div class="card-body">
+                      <h5 class="card-title">Chef {{ chef.name }}</h5>
+                      <p><strong>ID: </strong>{{ chef.chef_id }}</p>
+                      <p><strong>Specialty: </strong>{{ chef.specialty }}</p>
+                      <p><strong>Experience: </strong>{{ chef.experience }} year</p>
+                      {% if chef.bio %}
+                       <p class="card-text"><strong>Bio: </strong>{{ chef.bio}}</p>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+                            
+                            
+              <div class="d-flex" style="float: right;">
+                <div >
+                  <form method="POST" action="{% url 'admin_deletechef' chef.id %}" onsubmit="return confirm('Do you really want to delete this?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn mt-1 delete-link btn-danger"  >Delete</button>
+                  </form>
+                </div>
+                <div>
+                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#chefUpdateForm" style="float: right;margin: 5px;">Update</button>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}

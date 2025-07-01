@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Contact Details{% endblock %}
+{% block content %}
+  
+      <div class="container-fluid">
+        <div class="container-fluid">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title fw-semibold mb-4">Contact details</h5>
+              {% if contacts %}
+              <div class="card mb-0">
+                <div class="card-body p-4">
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                      <thead>
+                        <tr>
+                          <th scope="col">S/N</th>
+                          <th scope="col"  class="text-nowrap">Contact ID</th>
+                          <th scope="col"  class="text-nowrap">Name</th>
+                          <th scope="col">Email</th>
+                          <th scope="col"  class="text-nowrap">Phone</th>
+                          <th scope="col">Date&Time</th>
+                          <th scope="col">Subject</th>
+                          <th scope="col">Message</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for i in contacts %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ i.id }}</td>
+                            <td>{{ i.name }}</td>
+                            <td>{{ i.email }}</td>
+                            <td>{{ i.phone }}</td>
+                            <td>{{ i.created_at }}</td>
+                            <td>{{ i.subject }}</td>
+                            <td>{{ i.message }}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              {% else %}
+              <div style="text-align: center;">
+                <p>There is no Contacts yet!!</p>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}

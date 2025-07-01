@@ -1,0 +1,49 @@
+{% extends "extend.html" %}
+{% load static %}
+{% block title %}Edit Address{% endblock %}
+{% block content %}
+    <div class="container" style="padding: 10rem;">
+
+        <form class="row g-3 needs-validation" method="post" action="{% url 'update_address' address.id %}" >
+            {% csrf_token %}
+            <div class="col-md-6">
+                
+                <label for="street" class="form-label">Phone:</label><br>
+                <div class="input-group">
+                    <span class="input-group-text">+91</span>
+                    <input type="text" name="phone_number" class="form-control" id="phone" 
+                        pattern="\d{10}" 
+                        title="Please enter a 10-digit phone number" 
+                        placeholder="Enter 10-digit number"  value="{{ address.phone_number  }}"
+                        required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="street" class="form-label">Street:</label>
+                <input type="text" name="street" class="form-control" id="street" value="{{ address.street  }}" required>
+            </div>
+            <div class="col-md-6">
+                <label for="city" class="form-label">City:</label>
+                <input type="text" name="city" class="form-control" id="city" value="{{ address.city  }}" required>
+            </div>
+            <div class="col-md-6">
+                <label for="district" class="form-label">District:</label>
+                <input type="text" name="district" class="form-control" id="district" value="{{ address.district  }}" required>
+            </div>
+            <div class="col-md-6">
+                <label for="zipcode" class="form-label">Zip Code:</label>
+                <input type="text" name="zipcode" class="form-control" id="zipcode" value="{{ address.zipcode  }}" pattern="\d{6}" title="Please enter a 6-digit phone number" placeholder="Provide 6 digit number" required>
+            </div>
+            <div class="col-md-6">
+                <label>Address Type:</label>
+                <select name="address_type" class="form-control">
+                    <option value="1" >Permanent</option>
+                    <option value="2" >Temporary</option>
+                </select>
+            </div>
+            <div class="col-12 ">
+              <button class="btn btn-primary float-end" type="submit">Save</button>
+            </div>
+          </form>
+    </div>
+{% endblock %}
