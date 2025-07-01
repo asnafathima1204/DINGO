@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-fgecod*gaf#8nfbhu4oxh64y@mx1y3_)jwg8(yt7cyz%z1w7%9
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ['127.0.0.1', 'dingo-n29j.onrender.com']
 
 
