@@ -142,3 +142,4 @@ STATICFILES_DIRS = [STATIC_DIR, ]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = ['https://dingo-n29j.onrender.com']
 
+
