@@ -547,6 +547,9 @@ def checkout_view(request):
     # Calculate the final total
     grand_total = total_cart_price + shipping_charge + tax_amount
 
+    # Get selected address ID from session (if new address was added)
+    selected_address_id = request.session.pop('selected_address_id', None)
+
     return render(request, 'user_checkout.html', {
         'cart_items': cart_items,
         'item_count': item_count,
@@ -554,7 +557,8 @@ def checkout_view(request):
         'shipping_charge': shipping_charge,
         'tax_amount': tax_amount,
         'grand_total': grand_total,
-        'details':details
+        'details':details,
+        'selected_address_id': selected_address_id  #Pass to template
 
     })
 
@@ -602,7 +606,7 @@ def order_confirmation(request):
             return redirect('confirmation_page')
         
         else:
-            messages.error(request,'Please add address to your profile')
+            messages.error(request,'Please add address...')
     return redirect('checkout_view')
 
 
@@ -787,7 +791,7 @@ def save_address(request):
         print(request.POST)  # Debugging: See the received data
 
         user = User.objects.get(id=request.user.id)
-        data = Address.objects.create(phone_number=phone_number,
+        new_address = Address.objects.create(phone_number=phone_number,
                                       district=district,
                                       street=street,
                                       city=city,
@@ -795,9 +799,16 @@ def save_address(request):
                                       address_type=address_type,
                                       zipcode=zipcode
                                             )
-        data.save()
+        new_address.save()
         messages.success(request,"Address added")
-        return redirect(user_profile)
+
+        # 🔥 Store new address ID in session for pre-selecting in checkout
+        request.session['selected_address_id'] = new_address.id
+
+        # Check where the request came from
+        next_url = request.POST.get('next', 'user_profile')
+        return redirect(next_url)
+        # return redirect(user_profile)
     else:
         messages.warning(request, "Invalid")
         return redirect(user_profile)

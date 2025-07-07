@@ -37,14 +37,23 @@
 
                           
                           
-                          
-                            <select name="address" class="form-control">
-                                {% for i in details %}
-                                <option value="{{ i.street }},{{ i.city }},{{ i.district }},{{ i.zipcode }},{{ i.phone_number }}" >{{ i.street }},{{ i.city }},{{ i.district }},{{ i.zipcode }},{{ i.phone_number }}</option>
-                                
-                                {% endfor %}
-                            </select>
-                            <label>Address:</label>
+                            <div class="d-flex w-100">
+                              <div class="w-75">
+                                <select name="address" class="form-control">
+                                  {% for i in details %}
+                                  <option value="{{ i.street }}, {{ i.city }}, {{ i.district }}, {{ i.zipcode }}, {{ i.phone_number }}" {% if i.id == selected_address_id %}selected{% endif %}>
+                                    {{ i.street }}, {{ i.city }}, {{ i.district }}, {{ i.zipcode }}, {{ i.phone_number }}
+                                  </option>
+                                  <!-- <option value="{{ i.street }},{{ i.city }},{{ i.district }},{{ i.zipcode }},{{ i.phone_number }}">{{ i.street }},{{ i.city }},{{ i.district }},{{ i.zipcode }},{{ i.phone_number }}</option> -->
+                                  {% endfor %}
+                                </select>
+                                <label>Address:</label>
+                              </div>
+                              <div class="w-25">
+                                <button type="button" id="addAddressBtn" data-bs-toggle="modal" data-bs-target="#addAddressModal" class="btn btn-primary text-white ml-2" style="color: white !important;">New address</button>
+                              </div>
+                            </div>
+                            
                           <!-- Text input -->
                           <!-- <div data-mdb-input-init class="form-outline mb-4">
                             <input type="text" id="form7Example4" class="form-control" value="{{ i.street }},{{ i.city }},{{ i.district }},{{ i.zipcode }}"/>
@@ -97,6 +106,54 @@
         </div>
 
     </section>
+
+
+<!-- Add Address Modal -->
+<div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addAddressLabel">Add Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'save_address' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url 'checkout_view' %}">
+                    <div class="input-group">
+                        <span class="input-group-text">+91</span>
+                        <input type="tel" name="phone_number" class="form-control" id="phone" 
+                               pattern="\d{10}"minlength="10" maxlength="10"
+                               title="Please enter a 10-digit phone number" 
+                               placeholder="Enter 10-digit number" 
+                               required>
+                    </div>
+
+                    <label>Street:</label>
+                    <input type="text" name="street" class="form-control" required>
+
+                    <label>City:</label>
+                    <input type="text" name="city" class="form-control" required>
+
+                    <label>District:</label>
+                    <input type="text" name="district" class="form-control" required>
+
+                    <label>Zip Code:</label>
+                    <input type="text" minlength="6" maxlength="6" name="zipcode" class="form-control" pattern="\d{6}" title="Please enter a 6-digit phone number" placeholder="Provide 6 digit number" required>
+
+                    <label>Address Type:</label>
+                     <select name="address_type" class="form-control">
+                        <option value="1" >Permanent</option>
+                        <option value="2" >Temporary</option>
+                    </select>
+
+                    <button type="submit" class="btn btn-success mt-3">Save Address</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 {% block script %}
 document.querySelectorAll(".size-selector").forEach((selectElement) => {

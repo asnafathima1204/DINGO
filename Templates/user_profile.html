@@ -213,8 +213,10 @@ body{margin-top:20px;}
             
                     <div class="input-group">
                         <span class="input-group-text">+91</span>
-                        <input type="text" name="phone_number" class="form-control" id="phone" 
+                        <input type="tel" name="phone_number" class="form-control" id="phone" 
                                pattern="\d{10}" 
+                               minlength="10"
+                               maxlength="10"
                                title="Please enter a 10-digit phone number" 
                                placeholder="Enter 10-digit number" 
                                required>
@@ -230,7 +232,7 @@ body{margin-top:20px;}
                     <input type="text" name="district" class="form-control" required>
 
                     <label>Zip Code:</label>
-                    <input type="text" name="zipcode" class="form-control" pattern="\d{6}" title="Please enter a 6-digit phone number" placeholder="Provide 6 digit number" required>
+                    <input type="text" minlength="6" maxlength="6" name="zipcode" class="form-control" pattern="\d{6}" title="Please enter a 6-digit phone number" placeholder="Provide 6 digit number" required>
 
                     <label>Address Type:</label>
                      <select name="address_type" class="form-control">
