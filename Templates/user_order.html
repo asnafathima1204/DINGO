@@ -7,9 +7,19 @@
     padding: 7rem 0;
 }
 
+.btn-order{
+    width:20%;
+}
+
 .order_history .container{
     border: 2px solid #000;
 
+}
+
+@media (max-width: 768px) {
+.btn-order{
+    width:100%;
+}
 }
 
 {% endblock %}
@@ -64,7 +74,7 @@
             {% else %}
             <div style="text-align: center;justify-content: center;">
                 <h2>No orders yet. Start shopping now!</h2>
-                <a href="{% url 'food_menu' %}" class="btn  d-sm-block" style="background-color:#ff6426 !important;width: 20%;margin: auto;color: #fff !important;">Continue Shopping</a>
+                <a href="{% url 'food_menu' %}" class="btn btn-order  d-sm-block" style="background-color:#ff6426 !important;margin: auto;color: #fff !important;">Continue Shopping</a>
             </div>
             {% endif %}
     
